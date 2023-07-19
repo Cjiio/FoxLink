@@ -11,8 +11,6 @@ import android.ConnectionListener;
 import android.PeerInfoArray;
 import android.URLOpener;
 
-import tech.foxio.foxlink.BuildConfig;
-
 class EngineRunner {
 
     private static final String LOGTAG = "EngineRunner";
@@ -31,9 +29,10 @@ class EngineRunner {
                 new IFaceDiscover(),
                 routeNotifier);
 
-        if (BuildConfig.DEBUG) {
-            goClient.setTraceLogLevel();
-        }
+//        if (BuildConfig.DEBUG) {
+//            goClient.setTraceLogLevel();
+//        }
+        goClient.setTraceLogLevel();
     }
 
     public synchronized void run(URLOpener urlOpener) {

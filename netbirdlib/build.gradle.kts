@@ -23,9 +23,6 @@ android {
             )
         }
     }
-    buildFeatures {
-        compose = true
-    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -35,7 +32,7 @@ android {
 dependencies {
     //添加aar和jar
     implementation(fileTree("libs"))
-    implementation(project(mapOf("path" to ":app")))
+//    implementation(project(mapOf("path" to ":app")))
 
     implementation(libs.appcompat)
     implementation(libs.material)

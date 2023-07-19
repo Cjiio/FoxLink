@@ -4,12 +4,10 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
-    <application
-        android:allowBackup="false"
-        android:supportsRtl="true">
+    <application>
 
         <service
-            android:name="tech.foxio.netbirdlib.tool.VPNService"
+            android:name=".tool.VPNService"
             android:permission="android.permission.BIND_VPN_SERVICE"
             android:exported="false">
             <intent-filter>

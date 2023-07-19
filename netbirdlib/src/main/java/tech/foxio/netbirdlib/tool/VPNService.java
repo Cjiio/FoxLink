@@ -11,7 +11,9 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.os.Parcel;
 import android.util.Log;
+
 import androidx.annotation.Nullable;
+
 import android.ConnectionListener;
 import android.PeerInfoArray;
 import android.URLOpener;
@@ -47,9 +49,9 @@ public class VPNService extends VpnService {
     }
 
     @Override
-    public boolean onUnbind (Intent intent) {
+    public boolean onUnbind(Intent intent) {
         Log.d(LOGTAG, "unbind from activity");
-        if(!engineRunner.isRunning()) {
+        if (!engineRunner.isRunning()) {
             stopSelf();
         }
         return false; // false means do not call onRebind
@@ -65,7 +67,7 @@ public class VPNService extends VpnService {
     @Override
     public void onRevoke() {
         Log.d(LOGTAG, "VPN permission on revoke");
-        if(engineRunner!=null) {
+        if (engineRunner != null) {
             engineRunner.stop();
         }
     }
@@ -74,7 +76,7 @@ public class VPNService extends VpnService {
         return new Builder();
     }
 
-  private boolean hasVpnPermission(Activity context) {
+    private boolean hasVpnPermission(Activity context) {
         Intent intentPrepare = VpnService.prepare(this);
         if (intentPrepare != null) {
             Log.d(LOGTAG, "open vpn permission dialog");
@@ -85,6 +87,10 @@ public class VPNService extends VpnService {
     }
 
     public class MyLocalBinder extends Binder {
+        public boolean hasVpnPermission(Activity context) {
+            return VPNService.this.hasVpnPermission(context);
+        }
+
         @Override
         protected boolean onTransact(int code, Parcel data, Parcel reply, int flags) {
             if (code == IBinder.LAST_CALL_TRANSACTION) {
@@ -94,9 +100,6 @@ public class VPNService extends VpnService {
             return false;
         }
 
-        public boolean hasVpnPermission(Activity context) {
-            return VPNService.this.hasVpnPermission(context);
-        }
 
         public void runEngine(URLOpener urlOpener) {
             engineRunner.run(urlOpener);
@@ -126,7 +129,7 @@ public class VPNService extends VpnService {
             engineRunner.removeServiceStateListener(serviceStateListener);
         }
     }
-    
+
     public static boolean isUsingAlwaysOnVPN(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         Network[] networks = connectivityManager.getAllNetworks();

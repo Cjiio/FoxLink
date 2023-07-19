@@ -58,7 +58,7 @@ android {
 dependencies {
 //    implementation(fileTree("libs"))
     //导入netbird模块
-//    implementation(project(":netbirdlib"))
+    implementation(project(":netbirdlib"))
 
     //==================== Logging =================================
     val logVersion = "2.6.9"

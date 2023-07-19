@@ -1,19 +1,16 @@
 package tech.foxio.foxlink
 
 import android.app.Application
-import android.content.Context
 import dagger.hilt.android.HiltAndroidApp
+import tech.foxio.netbirdlib.NetbirdModule
+import javax.inject.Inject
 
 @HiltAndroidApp
-class MyApp : Application() {
-    companion object {
-        lateinit var appContext: Context
-    }
+class MyApp : Application(){
+//    @Inject
+//    lateinit var netbirdModule: NetbirdModule
     override fun onCreate() {
         super.onCreate()
-        appContext = applicationContext
-        loadJNI()
-    }
-    private fun loadJNI() {
+//        netbirdModule.startService()
     }
 }

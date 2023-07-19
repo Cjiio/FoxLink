@@ -1,5 +1,10 @@
 package tech.foxio.foxlink.ui.screens.home
 
+import android.app.Activity
+import android.net.VpnService
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -14,11 +19,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.KeyboardArrowRight
-import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
@@ -26,20 +27,24 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import tech.foxio.foxlink.R
+import tech.foxio.netbirdlib.NetbirdModule
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-//    homeViewModel: HomeViewModel = hiltViewModel()
+    homeViewModel: HomeViewModel = hiltViewModel()
 ) {
-//    val dataState by homeViewModel.dataState.collectAsState()
+    val dataState by homeViewModel.dataState.collectAsState()
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -54,9 +59,12 @@ fun HomeScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ConnectButton() {
+    val context = LocalContext.current
+    Log.d("XXXXXXXXXXXXXXXX",context.toString())
+    val netbirdModule = NetbirdModule(context)
+    netbirdModule.startService()
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -71,7 +79,9 @@ fun ConnectButton() {
                 .size(180.dp)
         ) {
             Surface(
-                onClick = { /*TODO*/ },
+                onClick = {
+                    netbirdModule.switchConnect(true)
+                },
                 shape = RoundedCornerShape(30.dp),
                 modifier = Modifier
                     .padding(30.dp),
@@ -82,7 +92,7 @@ fun ConnectButton() {
                 ) {
                     Icon(
                         tint = MaterialTheme.colorScheme.onPrimary,
-                        painter =  painterResource(id = R.drawable.power_icon),
+                        painter = painterResource(id = R.drawable.power_icon),
                         contentDescription = null,
                         modifier = Modifier
                             .padding(40.dp)

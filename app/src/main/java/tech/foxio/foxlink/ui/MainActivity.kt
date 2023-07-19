@@ -3,17 +3,26 @@ package tech.foxio.foxlink.ui
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import tech.foxio.foxlink.ui.theme.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
-import tech.foxio.foxlink.ui.screens.auth.login.LoginScreen
-import tech.foxio.foxlink.ui.screens.auth.register.RegisterScreen
+import tech.foxio.foxlink.R
+import tech.foxio.foxlink.ui.screens.home.HomeIntent
 import tech.foxio.foxlink.ui.screens.home.HomeScreen
-import tech.foxio.foxlink.ui.screens.onboarding.OnboardingScreen
+import tech.foxio.netbirdlib.NetbirdModule
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -22,8 +31,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             AppTheme {
                 Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    color = MaterialTheme.colorScheme.background,
                 ) {
                     HomeScreen()
                 }
