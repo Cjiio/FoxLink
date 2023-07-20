@@ -1,10 +1,6 @@
 package tech.foxio.foxlink.ui.screens.home
 
 import android.app.Activity
-import android.net.VpnService
-import android.util.Log
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -20,7 +16,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowRight
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -54,17 +49,16 @@ fun HomeScreen(
         ConnectionTime()
         ConnectionInfo()
         UpDownSpeed()
-        ConnectButton()
+        ConnectButton(homeViewModel)
         Tip()
     }
 }
 
 @Composable
-fun ConnectButton() {
-    val context = LocalContext.current
-    Log.d("XXXXXXXXXXXXXXXX",context.toString())
-    val netbirdModule = NetbirdModule(context)
-    netbirdModule.startService()
+fun ConnectButton(homeViewModel: HomeViewModel) {
+    val context = LocalContext.current as Activity
+//    val netbirdModule = NetbirdModule(context)
+//    netbirdModule.startService()
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -80,7 +74,10 @@ fun ConnectButton() {
         ) {
             Surface(
                 onClick = {
-                    netbirdModule.switchConnect(true)
+//                    netbirdModule.switchConnect(true)
+                    if (NetbirdModule.hasVpnPermission(context)){
+                        homeViewModel.sendUIIntent(HomeIntent.SwitchConnect)
+                    }
                 },
                 shape = RoundedCornerShape(30.dp),
                 modifier = Modifier

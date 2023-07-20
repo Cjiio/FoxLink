@@ -1,5 +1,7 @@
 package tech.foxio.netbirdlib;
 
+import static tech.foxio.netbirdlib.tool.VPNService.VPN_REQUEST_CODE;
+
 import android.ConnectionListener;
 import android.URLOpener;
 import android.app.Activity;
@@ -7,6 +9,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.net.VpnService;
 import android.os.IBinder;
 import android.util.Log;
 
@@ -15,15 +18,29 @@ import tech.foxio.netbirdlib.tool.VPNService;
 
 public class NetbirdModule {
     public static final String LOG_TAG = "netbirdlib";
-    ConnectionListener connectionListener;
-    private VPNService.MyLocalBinder mBinder;
     public final ServiceConnection serviceIPC;
+    private VPNService.MyLocalBinder mBinder;
     ServiceStateListener serviceStateListener;
+    ConnectionListener connectionListener;
     URLOpener urlOpener;
-    Activity activity;
+    private static NetbirdModule instance;
+    private final Context context;
 
-    public NetbirdModule(Context activity) {
-        this.activity = (Activity) activity;
+    public static synchronized void Init(Context context) {
+        if (instance == null) {
+            instance = new NetbirdModule(context);
+        }
+    }
+
+    public static void Destroy() {
+        if (instance != null) {
+            instance.unbindFromServiceOnDestroy();
+            instance = null;
+        }
+    }
+
+    public NetbirdModule(Context context) {
+        this.context = context.getApplicationContext();
         urlOpener = new MyURLOpener();
         serviceIPC = new MyServiceConnection();
         serviceStateListener = new MyServiceStateListener();
@@ -31,38 +48,54 @@ public class NetbirdModule {
         mBinder = new VPNService().new MyLocalBinder();
     }
 
-    public void startService() {
+    public static void startService() {
         Log.d(LOG_TAG, "try to start service");
-        Intent intent = new Intent(activity, VPNService.class);
-        activity.startService(intent);
-        bindToService();
+        if (instance == null) {
+            throw new IllegalStateException("NetbirdModule has not been initialized.");
+        }
+        Intent intent = new Intent(instance.context, VPNService.class);
+        instance.context.startService(intent);
+        instance.bindToService();
     }
 
     private void bindToService() {
         Log.d(LOG_TAG, "try to bind the service");
-        activity.bindService(new Intent(activity, VPNService.class), serviceIPC, Context.BIND_ABOVE_CLIENT);
+        context.bindService(new Intent(context, VPNService.class), serviceIPC, Context.BIND_ABOVE_CLIENT);
     }
 
     public void unbindFromServiceOnDestroy() {
         Log.d(LOG_TAG, "unbindFromServiceOnDestroy");
-        if (mBinder == null){
+        if (mBinder == null) {
             return;
         }
         unBindFromService();
         mBinder = null;
     }
 
-    public void switchConnect(Boolean z) {
-        if (!z){
-            mBinder.stopEngine();
-        }else if (mBinder.hasVpnPermission(activity)){
-            mBinder.runEngine(urlOpener);
+    public static void switchConnect(Boolean z) {
+        if (instance == null) {
+            throw new IllegalStateException("NetbirdModule has not been initialized.");
         }
+        if (!z) {
+            instance.mBinder.stopEngine();
+        } else {
+            instance.mBinder.runEngine(instance.urlOpener);
+        }
+    }
+
+    public static boolean hasVpnPermission(Activity activity) {
+        Intent intentPrepare = VpnService.prepare(activity);
+        if (intentPrepare != null) {
+            Log.d(LOG_TAG, "open vpn permission dialog");
+            activity.startActivityForResult(intentPrepare, VPN_REQUEST_CODE);
+            return false;
+        }
+        return true;
     }
 
     public void unbindFromServiceAfterCancel() {
         Log.d(LOG_TAG, "unbindFromServiceAfterCancel");
-        if (mBinder == null){
+        if (mBinder == null) {
             return;
         }
         unBindFromService();
@@ -73,10 +106,10 @@ public class NetbirdModule {
         Log.d(LOG_TAG, "unBindFromService");
         mBinder.removeConnectionStateListener();
         mBinder.removeServiceStateListener(serviceStateListener);
-        activity.unbindService(serviceIPC);
+        context.unbindService(serviceIPC);
     }
 
-    private class MyServiceStateListener implements ServiceStateListener {
+    private static class MyServiceStateListener implements ServiceStateListener {
 
         @Override
         public void onStarted() {
@@ -95,14 +128,14 @@ public class NetbirdModule {
         }
     }
 
-    private class MyURLOpener implements URLOpener {
+    private static class MyURLOpener implements URLOpener {
         @Override
         public void open(String s) {
             Log.d(LOG_TAG, "open " + s);
         }
     }
 
-    private class MyConnectionListener implements ConnectionListener {
+    private static class MyConnectionListener implements ConnectionListener {
         @Override
         public void onAddressChanged(String s, String s1) {
             Log.d(LOG_TAG, "onAddressChanged " + s + " " + s1);

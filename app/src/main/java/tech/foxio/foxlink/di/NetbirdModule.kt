@@ -1,6 +1,5 @@
 package tech.foxio.foxlink.di
 
-import android.app.Activity
 import android.content.Context
 import dagger.Module
 import dagger.Provides
@@ -12,10 +11,10 @@ import javax.inject.Singleton
 
 //@Module
 //@InstallIn(SingletonComponent::class)
-object NetbirdModule {
-//    @Provides
-//    @Singleton
-//    fun provideNetbirdModule(@ApplicationContext context: Context) : NetbirdModule {
-//        return NetbirdModule(context)
-//    }
-}
+//object NetbirdModule {
+////    @Provides
+////    @Singleton
+////    fun provideNetbirdModule(@ApplicationContext context: Context) : NetbirdModule {
+////        return NetbirdModule(context)
+////    }
+//}
