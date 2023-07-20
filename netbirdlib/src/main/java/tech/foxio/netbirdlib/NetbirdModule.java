@@ -13,18 +13,20 @@ import android.net.VpnService;
 import android.os.IBinder;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import tech.foxio.netbirdlib.tool.ServiceStateListener;
 import tech.foxio.netbirdlib.tool.VPNService;
 
 public class NetbirdModule {
     public static final String LOG_TAG = "netbirdlib";
-    public final ServiceConnection serviceIPC;
-    private VPNService.MyLocalBinder mBinder;
-    ServiceStateListener serviceStateListener;
-    ConnectionListener connectionListener;
-    URLOpener urlOpener;
-    private static NetbirdModule instance;
-    private final Context context;
+    public static ServiceConnection serviceIPC;
+    public static VPNService.MyLocalBinder mBinder;
+    public static ServiceStateListener serviceStateListener;
+    public static ConnectionListener connectionListener;
+    public static URLOpener urlOpener;
+    public static NetbirdModule instance;
+    public Context context;
 
     public static synchronized void Init(Context context) {
         if (instance == null) {
@@ -33,13 +35,14 @@ public class NetbirdModule {
     }
 
     public static void Destroy() {
+        Log.d(LOG_TAG, "destroy");
         if (instance != null) {
             instance.unbindFromServiceOnDestroy();
             instance = null;
         }
     }
 
-    public NetbirdModule(Context context) {
+    public NetbirdModule(@NonNull Context context) {
         this.context = context.getApplicationContext();
         urlOpener = new MyURLOpener();
         serviceIPC = new MyServiceConnection();
@@ -77,30 +80,24 @@ public class NetbirdModule {
             throw new IllegalStateException("NetbirdModule has not been initialized.");
         }
         if (!z) {
-            instance.mBinder.stopEngine();
+            mBinder.stopEngine();
         } else {
-            instance.mBinder.runEngine(instance.urlOpener);
+            mBinder.runEngine(urlOpener);
         }
     }
 
     public static boolean hasVpnPermission(Activity activity) {
-        Intent intentPrepare = VpnService.prepare(activity);
-        if (intentPrepare != null) {
-            Log.d(LOG_TAG, "open vpn permission dialog");
-            activity.startActivityForResult(intentPrepare, VPN_REQUEST_CODE);
-            return false;
-        }
-        return true;
+        return mBinder.hasVpnPermission(activity);
     }
 
-    public void unbindFromServiceAfterCancel() {
-        Log.d(LOG_TAG, "unbindFromServiceAfterCancel");
-        if (mBinder == null) {
-            return;
-        }
-        unBindFromService();
-        mBinder = null;
-    }
+//    public void unbindFromServiceAfterCancel() {
+//        Log.d(LOG_TAG, "unbindFromServiceAfterCancel");
+//        if (mBinder == null) {
+//            return;
+//        }
+//        unBindFromService();
+//        mBinder = null;
+//    }
 
     private void unBindFromService() {
         Log.d(LOG_TAG, "unBindFromService");

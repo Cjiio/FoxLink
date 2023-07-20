@@ -180,7 +180,7 @@ private fun HeadContent() {
     ) {
         Surface(
             color = MaterialTheme.colorScheme.onBackground,
-            shape = MaterialTheme.shapes.small,
+            shape = MaterialTheme.shapes.large,
             modifier = Modifier.size(40.dp)
         ) {
             Icon(

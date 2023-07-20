@@ -16,6 +16,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material3.Divider
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -37,9 +39,9 @@ import tech.foxio.netbirdlib.NetbirdModule
 
 @Composable
 fun HomeScreen(
-    homeViewModel: HomeViewModel = hiltViewModel()
+//    homeViewModel: HomeViewModel = hiltViewModel()
 ) {
-    val dataState by homeViewModel.dataState.collectAsState()
+//    val dataState by homeViewModel.dataState.collectAsState()
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -49,14 +51,14 @@ fun HomeScreen(
         ConnectionTime()
         ConnectionInfo()
         UpDownSpeed()
-        ConnectButton(homeViewModel)
+        ConnectButton()
         Tip()
     }
 }
 
 @Composable
-fun ConnectButton(homeViewModel: HomeViewModel) {
-    val context = LocalContext.current as Activity
+fun ConnectButton() {
+//    val context = LocalContext.current as Activity
 //    val netbirdModule = NetbirdModule(context)
 //    netbirdModule.startService()
     Column(
@@ -75,9 +77,9 @@ fun ConnectButton(homeViewModel: HomeViewModel) {
             Surface(
                 onClick = {
 //                    netbirdModule.switchConnect(true)
-                    if (NetbirdModule.hasVpnPermission(context)){
-                        homeViewModel.sendUIIntent(HomeIntent.SwitchConnect)
-                    }
+//                    if (NetbirdModule.hasVpnPermission(context)){
+//                        homeViewModel.sendUIIntent(HomeIntent.SwitchConnect)
+//                    }
                 },
                 shape = RoundedCornerShape(30.dp),
                 modifier = Modifier
@@ -217,22 +219,17 @@ private fun ConnectionInfo() {
 fun UpDownSpeed() {
     Row(
         modifier = Modifier
-            .padding(vertical = 15.dp)
+            .padding(vertical = 15.dp, horizontal = 30.dp)
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
         SpeedView(R.drawable.line_arrow_circle_down_light, "Download", "245")
-        Spacer(modifier = Modifier.width(40.dp))
-        Surface(
+        Divider(
             modifier = Modifier
                 .height(40.dp)
                 .width(1.dp),
-            color = MaterialTheme.colorScheme.outline,
-            shape = MaterialTheme.shapes.small,
-            content = {}
         )
-        Spacer(modifier = Modifier.width(40.dp))
         SpeedView(R.drawable.line_arrow_circle_up_light, "Upload", "176")
     }
 }
@@ -270,7 +267,7 @@ private fun HeadContent() {
     ) {
         FilledIconButton(
             onClick = { /*TODO*/ },
-            shape = MaterialTheme.shapes.small,
+            shape = MaterialTheme.shapes.large,
         ) {
             Surface(
                 color = MaterialTheme.colorScheme.primary,
@@ -282,7 +279,7 @@ private fun HeadContent() {
                     }
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.menu_icon),
+                    imageVector = Icons.Default.Menu,
                     contentDescription = null,
                     modifier = Modifier
                         .padding(6.dp),
@@ -297,7 +294,7 @@ private fun HeadContent() {
         )
         FilledIconButton(
             onClick = { /*TODO*/ },
-            shape = MaterialTheme.shapes.small,
+            shape = MaterialTheme.shapes.large,
         ) {
             Surface(
                 color = MaterialTheme.colorScheme.primary,
