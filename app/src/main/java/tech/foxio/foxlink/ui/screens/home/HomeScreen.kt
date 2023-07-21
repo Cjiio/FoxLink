@@ -1,6 +1,12 @@
 package tech.foxio.foxlink.ui.screens.home
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -29,10 +35,17 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -174,9 +187,10 @@ fun ConnectButton() {
                 ) {
                     Icon(
                         tint = MaterialTheme.colorScheme.onPrimary,
-                        painter = painterResource(id = R.drawable.power_icon),
+                        painter = painterResource(id = R.drawable.connecting_icon),
                         contentDescription = null,
-                        modifier = Modifier.padding(40.dp)
+                        modifier = Modifier
+                            .padding(30.dp)
                     )
                 }
             }
@@ -374,7 +388,7 @@ private fun ConnectionTime() {
             color = MaterialTheme.colorScheme.outline
         )
         Text(
-            text = "00:30:26",
+            text = "00:30:27",
             style = MaterialTheme.typography.displaySmall,
             color = MaterialTheme.colorScheme.onPrimary
         )

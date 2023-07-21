@@ -66,7 +66,7 @@ private fun Content(paddingValues: PaddingValues) {
             Icon(
                 modifier = Modifier
                     .padding(30.dp),
-                painter = painterResource(id = R.drawable.power_icon),
+                painter = painterResource(id = R.drawable.connect_icon),
                 contentDescription = null
             )
         }
