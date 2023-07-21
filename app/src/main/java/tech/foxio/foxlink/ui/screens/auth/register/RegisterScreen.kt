@@ -46,7 +46,8 @@ fun RegisterScreen(
                 contentScale = ContentScale.Crop
             )
             .fillMaxSize()
-            .padding(horizontal = 25.dp, vertical = 50.dp)
+            .padding(horizontal = 25.dp)
+            .padding(top = 50.dp),
     ) {
         HeadContent()
         PortraitContent()

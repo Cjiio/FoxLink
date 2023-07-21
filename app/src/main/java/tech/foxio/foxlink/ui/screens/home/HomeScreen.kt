@@ -1,6 +1,5 @@
 package tech.foxio.foxlink.ui.screens.home
 
-import android.app.Activity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -14,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Menu
@@ -24,43 +24,43 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import tech.foxio.foxlink.R
-import tech.foxio.netbirdlib.NetbirdModule
 
 @Composable
 fun HomeScreen(
 //    homeViewModel: HomeViewModel = hiltViewModel()
 ) {
 //    val dataState by homeViewModel.dataState.collectAsState()
-    Column(
+    Scaffold(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 25.dp, vertical = 50.dp)
-    ) {
-        HeadContent()
-        ConnectionTime()
-        ConnectionInfo()
-        UpDownSpeed()
-        ConnectButton()
-        Tip()
-    }
+            .padding(horizontal = 25.dp)
+            .padding(top = 50.dp),
+        backgroundColor = MaterialTheme.colorScheme.background,
+        topBar = { HeadContent() },
+        content = {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(it)
+            ) {
+                ConnectionTime()
+                ConnectionInfo()
+                UpDownSpeed()
+                ConnectButton()
+                Tip()
+            }
+        }
+    )
 }
 
 @Composable
 fun ConnectButton() {
-//    val context = LocalContext.current as Activity
-//    val netbirdModule = NetbirdModule(context)
-//    netbirdModule.startService()
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -71,8 +71,7 @@ fun ConnectButton() {
         Surface(
             color = MaterialTheme.colorScheme.surface,
             shape = RoundedCornerShape(50.dp),
-            modifier = Modifier
-                .size(180.dp)
+            modifier = Modifier.size(180.dp)
         ) {
             Surface(
                 onClick = {
@@ -82,19 +81,16 @@ fun ConnectButton() {
 //                    }
                 },
                 shape = RoundedCornerShape(30.dp),
-                modifier = Modifier
-                    .padding(30.dp),
+                modifier = Modifier.padding(30.dp),
             ) {
                 Surface(
-                    color = MaterialTheme.colorScheme.onSurface,
-                    shape = MaterialTheme.shapes.small
+                    color = MaterialTheme.colorScheme.onSurface, shape = MaterialTheme.shapes.small
                 ) {
                     Icon(
                         tint = MaterialTheme.colorScheme.onPrimary,
                         painter = painterResource(id = R.drawable.power_icon),
                         contentDescription = null,
-                        modifier = Modifier
-                            .padding(40.dp)
+                        modifier = Modifier.padding(40.dp)
                     )
                 }
             }
@@ -127,13 +123,10 @@ fun Tip() {
 
 @Composable
 fun SpeedView(
-    icon: Int,
-    text: String,
-    speed: String
+    icon: Int, text: String, speed: String
 ) {
     Row(
-        modifier = Modifier
-            .padding(horizontal = 8.dp),
+        modifier = Modifier.padding(horizontal = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
@@ -178,12 +171,10 @@ private fun ConnectionInfo() {
             Surface(
                 shape = MaterialTheme.shapes.large,
                 color = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier
-                    .size(70.dp)
+                modifier = Modifier.size(70.dp)
             ) {
                 Image(
-                    modifier = Modifier
-                        .padding(10.dp),
+                    modifier = Modifier.padding(10.dp),
                     painter = painterResource(id = R.drawable.america_united_states),
                     contentDescription = null
                 )
@@ -269,20 +260,17 @@ private fun HeadContent() {
             onClick = { /*TODO*/ },
             shape = MaterialTheme.shapes.large,
         ) {
-            Surface(
-                color = MaterialTheme.colorScheme.primary,
+            Surface(color = MaterialTheme.colorScheme.primary,
                 shape = MaterialTheme.shapes.small,
                 modifier = Modifier
                     .size(40.dp)
                     .clickable {
 
-                    }
-            ) {
+                    }) {
                 Icon(
                     imageVector = Icons.Default.Menu,
                     contentDescription = null,
-                    modifier = Modifier
-                        .padding(6.dp),
+                    modifier = Modifier.padding(6.dp),
                     tint = MaterialTheme.colorScheme.onSecondary
                 )
             }
@@ -299,14 +287,12 @@ private fun HeadContent() {
             Surface(
                 color = MaterialTheme.colorScheme.primary,
                 shape = MaterialTheme.shapes.small,
-                modifier = Modifier
-                    .size(40.dp)
+                modifier = Modifier.size(40.dp)
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.fill_crown_icon),
                     contentDescription = null,
-                    modifier = Modifier
-                        .padding(6.dp),
+                    modifier = Modifier.padding(6.dp),
                     tint = MaterialTheme.colorScheme.onSecondary
                 )
             }

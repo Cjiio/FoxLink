@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.LocationOn
@@ -32,93 +33,106 @@ import tech.foxio.foxlink.R
 
 @Composable
 fun ConnectDetailScreen(
-//    splashViewModel: SplashViewModel = hiltViewModel()
+//    connectDetailViewModel: ConnectDetailViewModel = hiltViewModel()
 ) {
-//    val dataState by splashViewModel.dataState.collectAsState()
+//    val dataState by connectDetailViewModel.dataState.collectAsState()
+    Scaffold(
+        modifier = Modifier
+            .padding(horizontal = 25.dp)
+            .padding(top = 50.dp),
+        backgroundColor = MaterialTheme.colorScheme.background,
+        topBar = { HeadContent() },
+        content = {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(it)
+            ) {
+                Content()
+            }
+        }
+    )
+}
+
+@Composable
+private fun Content() {
     Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 25.dp, vertical = 50.dp)
     ) {
-        HeadContent()
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
+        Spacer(modifier = Modifier.height(40.dp))
+        Surface(
+            color = MaterialTheme.colorScheme.primaryContainer,
+            shape = MaterialTheme.shapes.extraLarge,
+            modifier = Modifier
+                .size(100.dp)
+        ) {
+            Icon(
+                modifier = Modifier
+                    .padding(30.dp),
+                painter = painterResource(id = R.drawable.power_icon),
+                contentDescription = null
+            )
+        }
+        Spacer(modifier = Modifier.height(40.dp))
+        Text(
+            modifier = Modifier
+                .padding(horizontal = 10.dp),
+            textAlign = TextAlign.Center,
+            color = MaterialTheme.colorScheme.outline,
+            text = "This is a summary of information from using FoxLink while connected"
+        )
+        Spacer(modifier = Modifier.height(50.dp))
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(10.dp),
             modifier = Modifier
                 .fillMaxSize()
         ) {
-            Spacer(modifier = Modifier.height(40.dp))
-            Surface(
-                color = MaterialTheme.colorScheme.primaryContainer,
-                shape = MaterialTheme.shapes.extraLarge,
-                modifier = Modifier
-                    .size(100.dp)
-            ) {
-                Icon(
+            items(3) {
+                Surface(
+                    color = MaterialTheme.colorScheme.surface,
+                    shape = MaterialTheme.shapes.extraLarge,
                     modifier = Modifier
-                        .padding(30.dp),
-                    painter = painterResource(id = R.drawable.power_icon),
-                    contentDescription = null
-                )
-            }
-            Spacer(modifier = Modifier.height(40.dp))
-            Text(
-                modifier = Modifier
-                    .padding(horizontal = 10.dp),
-                textAlign = TextAlign.Center,
-                color = MaterialTheme.colorScheme.outline,
-                text = "This is a summary of information from using FoxLink while connected"
-            )
-            Spacer(modifier = Modifier.height(50.dp))
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(10.dp),
-                modifier = Modifier
-                    .fillMaxSize()
-            ) {
-                items(3) {
-                    Surface(
-                        color = MaterialTheme.colorScheme.surface,
-                        shape = MaterialTheme.shapes.extraLarge,
+                        .fillMaxWidth()
+                        .height(90.dp)
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Start,
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .height(90.dp)
+                            .fillMaxSize()
+                            .padding(10.dp),
                     ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Start,
+                        Surface(
+                            shape = MaterialTheme.shapes.large,
+                            color = MaterialTheme.colorScheme.onSurface,
                             modifier = Modifier
-                                .fillMaxSize()
-                                .padding(10.dp),
+                                .size(70.dp)
                         ) {
-                            Surface(
-                                shape = MaterialTheme.shapes.large,
-                                color = MaterialTheme.colorScheme.onSurface,
+                            Icon(
                                 modifier = Modifier
-                                    .size(70.dp)
-                            ) {
-                                Icon(
-                                    modifier = Modifier
-                                        .padding(10.dp),
-                                    imageVector = Icons.Default.LocationOn,
-                                    contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.outline
-                                )
-                            }
-                            Spacer(modifier = Modifier.width(10.dp))
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                            ) {
-                                Text(
-                                    text = "Location",
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = MaterialTheme.colorScheme.outline
-                                )
-                                Text(
-                                    text = "United States - Miami",
-                                    style = MaterialTheme.typography.titleMedium,
-                                    color = MaterialTheme.colorScheme.primary
-                                )
-                            }
+                                    .padding(10.dp),
+                                imageVector = Icons.Default.LocationOn,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.outline
+                            )
+                        }
+                        Spacer(modifier = Modifier.width(10.dp))
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                        ) {
+                            Text(
+                                text = "Location",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.outline
+                            )
+                            Text(
+                                text = "United States - Miami",
+                                style = MaterialTheme.typography.titleMedium,
+                                color = MaterialTheme.colorScheme.primary
+                            )
                         }
                     }
                 }

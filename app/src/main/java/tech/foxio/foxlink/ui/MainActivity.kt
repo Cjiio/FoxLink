@@ -6,8 +6,11 @@ import androidx.activity.compose.setContent
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import dagger.hilt.android.AndroidEntryPoint
+import tech.foxio.foxlink.ui.screens.auth.login.LoginScreen
+import tech.foxio.foxlink.ui.screens.auth.register.RegisterScreen
 import tech.foxio.foxlink.ui.screens.connectDetail.ConnectDetailScreen
 import tech.foxio.foxlink.ui.screens.home.HomeScreen
+import tech.foxio.foxlink.ui.screens.location.LocationScreen
 import tech.foxio.foxlink.ui.theme.AppTheme
 import tech.foxio.netbirdlib.NetbirdModule
 
@@ -20,7 +23,7 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     color = MaterialTheme.colorScheme.background,
                 ) {
-                    HomeScreen()
+                    LocationScreen()
                 }
             }
         }
