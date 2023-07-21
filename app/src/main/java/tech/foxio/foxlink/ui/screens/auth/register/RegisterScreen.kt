@@ -29,6 +29,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import tech.foxio.foxlink.R
+import tech.foxio.foxlink.ui.screens.connectDetail.ConnectDetailScreen
+import tech.foxio.foxlink.ui.theme.AppTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -224,5 +226,11 @@ private fun HeadContent() {
 @Preview
 @Composable
 fun RegisterScreenPreview() {
-    RegisterScreen()
+    AppTheme {
+        Surface(
+            color = MaterialTheme.colorScheme.background,
+        ) {
+            RegisterScreen()
+        }
+    }
 }

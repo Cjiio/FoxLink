@@ -1,7 +1,7 @@
 package tech.foxio.foxlink.ui.screens.home
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,11 +12,16 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Scaffold
+import androidx.compose.material.ScaffoldState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
@@ -24,39 +29,120 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import tech.foxio.foxlink.R
+import tech.foxio.foxlink.ui.theme.AppTheme
 
 @Composable
 fun HomeScreen(
 //    homeViewModel: HomeViewModel = hiltViewModel()
 ) {
 //    val dataState by homeViewModel.dataState.collectAsState()
+    val scaffoldState = rememberScaffoldState()
+    val scope = rememberCoroutineScope()
     Scaffold(
-        modifier = Modifier
-            .padding(horizontal = 25.dp)
-            .padding(top = 50.dp),
+        scaffoldState = scaffoldState,
         backgroundColor = MaterialTheme.colorScheme.background,
-        topBar = { HeadContent() },
+        drawerBackgroundColor = MaterialTheme.colorScheme.background.copy(alpha = 0.95f),
+        topBar = { HeadContent(scaffoldState, scope) },
         content = {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
+                    .padding(horizontal = 25.dp)
                     .padding(it)
             ) {
                 ConnectionTime()
                 ConnectionInfo()
                 UpDownSpeed()
                 ConnectButton()
-                Tip()
+                TipsView()
             }
+        },
+        drawerContent = {
+            DrawerContent(scaffoldState, scope)
         }
     )
+}
+
+@Preview
+@Composable
+fun DrawerContentPreview() {
+    val scaffoldState = rememberScaffoldState()
+    val scope = rememberCoroutineScope()
+    AppTheme {
+        Surface(
+            color = MaterialTheme.colorScheme.background,
+        ) {
+            DrawerContent(scaffoldState, scope)
+        }
+    }
+}
+
+@Composable
+fun DrawerContent(scaffoldState: ScaffoldState, scope: CoroutineScope) {
+
+    BackHandler(enabled = scaffoldState.drawerState.isOpen) {
+        scope.launch {
+            scaffoldState.drawerState.close()
+        }
+    }
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 25.dp)
+            .padding(top = 100.dp)
+    ) {
+        Icon(
+            imageVector = Icons.Default.AccountCircle,
+            contentDescription = null,
+            modifier = Modifier
+                .size(120.dp),
+            tint = Color.White
+        )
+        Button(onClick = { /*TODO*/ }) {
+            Text(text = "Sign In")
+        }
+        Spacer(modifier = Modifier.height(40.dp))
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalAlignment = Alignment.Start,
+            verticalArrangement = Arrangement.spacedBy(40.dp),
+            content = {
+                items(5) {
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.AccountCircle,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                        Spacer(modifier = Modifier.width(20.dp))
+                        Text(
+                            text = "My Account",
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.onPrimary
+                        )
+                    }
+                }
+            }
+        )
+    }
 }
 
 @Composable
@@ -98,8 +184,20 @@ fun ConnectButton() {
     }
 }
 
+@Preview
 @Composable
-fun Tip() {
+fun ConnectButtonPreview() {
+    AppTheme {
+        Surface(
+            color = MaterialTheme.colorScheme.background,
+        ) {
+            ConnectButton()
+        }
+    }
+}
+
+@Composable
+fun TipsView() {
     Row(
         modifier = Modifier
             .padding(vertical = 16.dp)
@@ -118,6 +216,18 @@ fun Tip() {
             text = "Tap to Connect",
             color = MaterialTheme.colorScheme.outline,
         )
+    }
+}
+
+@Preview
+@Composable
+fun TipsViewPreview() {
+    AppTheme {
+        Surface(
+            color = MaterialTheme.colorScheme.background,
+        ) {
+            TipsView()
+        }
     }
 }
 
@@ -206,6 +316,18 @@ private fun ConnectionInfo() {
     }
 }
 
+@Preview
+@Composable
+fun ConnectionInfoPreview() {
+    AppTheme {
+        Surface(
+            color = MaterialTheme.colorScheme.background,
+        ) {
+            ConnectionInfo()
+        }
+    }
+}
+
 @Composable
 fun UpDownSpeed() {
     Row(
@@ -222,6 +344,18 @@ fun UpDownSpeed() {
                 .width(1.dp),
         )
         SpeedView(R.drawable.line_arrow_circle_up_light, "Upload", "176")
+    }
+}
+
+@Preview
+@Composable
+fun UpDownSpeedPreview() {
+    AppTheme {
+        Surface(
+            color = MaterialTheme.colorScheme.background,
+        ) {
+            UpDownSpeed()
+        }
     }
 }
 
@@ -247,26 +381,46 @@ private fun ConnectionTime() {
     }
 }
 
+@Preview
 @Composable
-private fun HeadContent() {
+fun ConnectionTimePreview() {
+    AppTheme {
+        Surface(
+            color = MaterialTheme.colorScheme.background,
+        ) {
+            ConnectionTime()
+        }
+    }
+}
+
+@Composable
+private fun HeadContent(
+    scaffoldState: ScaffoldState,
+    scope: CoroutineScope
+) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier
-            .height(50.dp)
+            .padding(horizontal = 25.dp)
+            .padding(top = 50.dp)
             .fillMaxWidth()
     ) {
         FilledIconButton(
             onClick = { /*TODO*/ },
             shape = MaterialTheme.shapes.large,
         ) {
-            Surface(color = MaterialTheme.colorScheme.primary,
+            Surface(
+                onClick = {
+                    scope.launch {
+                        scaffoldState.drawerState.open()
+                    }
+                },
+                color = MaterialTheme.colorScheme.primary,
                 shape = MaterialTheme.shapes.small,
                 modifier = Modifier
                     .size(40.dp)
-                    .clickable {
-
-                    }) {
+            ) {
                 Icon(
                     imageVector = Icons.Default.Menu,
                     contentDescription = null,
@@ -303,5 +457,11 @@ private fun HeadContent() {
 @Preview
 @Composable
 fun HomeScreenPreview() {
-    HomeScreen()
+    AppTheme {
+        Surface(
+            color = MaterialTheme.colorScheme.background,
+        ) {
+            HomeScreen()
+        }
+    }
 }

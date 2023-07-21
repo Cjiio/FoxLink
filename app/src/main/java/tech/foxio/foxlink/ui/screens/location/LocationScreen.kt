@@ -50,6 +50,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import tech.foxio.foxlink.R
+import tech.foxio.foxlink.ui.screens.onboarding.OnboardingScreen
+import tech.foxio.foxlink.ui.theme.AppTheme
 import java.util.UUID
 
 @Composable
@@ -82,15 +84,13 @@ fun LocationScreen(
         UUID.randomUUID().toString(),
     )
     Scaffold(
-        modifier = Modifier
-            .padding(horizontal = 25.dp)
-            .padding(top = 50.dp),
         backgroundColor = MaterialTheme.colorScheme.background,
         topBar = { HeadContent() },
         content = {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
+                    .padding(horizontal = 25.dp)
                     .padding(it)
             ) {
                 TabContent()
@@ -113,7 +113,7 @@ private fun Content(serverData: ArrayList<String>) {
         )
     }
     Spacer(modifier = Modifier.height(10.dp))
-    var selectedTag = remember { mutableStateOf("Null") }
+    val selectedTag = remember { mutableStateOf("Null") }
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(10.dp),
         modifier = Modifier
@@ -258,7 +258,8 @@ private fun HeadContent() {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier
-            .height(50.dp)
+            .padding(horizontal = 25.dp)
+            .padding(top = 50.dp)
             .fillMaxWidth()
     ) {
         FilledIconButton(
@@ -313,5 +314,11 @@ private fun HeadContent() {
 @Preview
 @Composable
 fun LocationScreenPreview() {
-    LocationScreen()
+    AppTheme {
+        Surface(
+            color = MaterialTheme.colorScheme.background,
+        ) {
+            LocationScreen()
+        }
+    }
 }

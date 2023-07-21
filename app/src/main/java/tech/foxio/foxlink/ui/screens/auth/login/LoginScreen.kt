@@ -30,6 +30,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import tech.foxio.foxlink.R
+import tech.foxio.foxlink.ui.screens.auth.register.RegisterScreen
+import tech.foxio.foxlink.ui.theme.AppTheme
 
 @Composable
 fun LoginScreen(
@@ -240,5 +242,11 @@ private fun HeadContent() {
 @Preview
 @Composable
 fun LoginScreenPreview() {
-    LoginScreen()
+    AppTheme {
+        Surface(
+            color = MaterialTheme.colorScheme.background,
+        ) {
+            LoginScreen()
+        }
+    }
 }

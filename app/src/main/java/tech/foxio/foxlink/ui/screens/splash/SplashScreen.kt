@@ -2,6 +2,8 @@ package tech.foxio.foxlink.ui.screens.splash
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -15,6 +17,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import tech.foxio.foxlink.R
 import tech.foxio.foxlink.ui.components.Full_Logo
+import tech.foxio.foxlink.ui.screens.home.HomeScreen
+import tech.foxio.foxlink.ui.theme.AppTheme
 
 @Composable
 fun SplashScreen(
@@ -38,5 +42,11 @@ fun SplashScreen(
 @Preview
 @Composable
 fun SplashScreenPreview() {
-    SplashScreen()
+    AppTheme {
+        Surface(
+            color = MaterialTheme.colorScheme.background,
+        ) {
+            SplashScreen()
+        }
+    }
 }

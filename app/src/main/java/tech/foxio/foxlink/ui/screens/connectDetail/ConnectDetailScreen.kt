@@ -4,6 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -30,6 +31,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import tech.foxio.foxlink.R
+import tech.foxio.foxlink.ui.theme.AppTheme
 
 @Composable
 fun ConnectDetailScreen(
@@ -37,28 +39,21 @@ fun ConnectDetailScreen(
 ) {
 //    val dataState by connectDetailViewModel.dataState.collectAsState()
     Scaffold(
-        modifier = Modifier
-            .padding(horizontal = 25.dp)
-            .padding(top = 50.dp),
         backgroundColor = MaterialTheme.colorScheme.background,
         topBar = { HeadContent() },
         content = {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(it)
-            ) {
-                Content()
-            }
+            Content(it)
         }
     )
 }
 
 @Composable
-private fun Content() {
+private fun Content(paddingValues: PaddingValues) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
+            .padding(horizontal = 25.dp)
+            .padding(paddingValues)
             .fillMaxSize()
     ) {
         Spacer(modifier = Modifier.height(40.dp))
@@ -145,6 +140,8 @@ private fun Content() {
 private fun HeadContent() {
     Box(
         modifier = Modifier
+            .padding(horizontal = 25.dp)
+            .padding(top = 50.dp)
             .height(50.dp)
             .fillMaxWidth()
     ) {
@@ -190,5 +187,11 @@ private fun HeadContent() {
 @Preview
 @Composable
 fun ConnectDetailScreenPreview() {
-    ConnectDetailScreen()
+    AppTheme {
+        Surface(
+            color = MaterialTheme.colorScheme.background,
+        ) {
+            ConnectDetailScreen()
+        }
+    }
 }

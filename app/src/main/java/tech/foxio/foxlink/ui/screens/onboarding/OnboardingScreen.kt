@@ -12,6 +12,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -27,6 +28,8 @@ import com.google.accompanist.pager.HorizontalPagerIndicator
 import kotlinx.coroutines.launch
 import tech.foxio.foxlink.R
 import tech.foxio.foxlink.ui.components.OnboardingUI
+import tech.foxio.foxlink.ui.screens.splash.SplashScreen
+import tech.foxio.foxlink.ui.theme.AppTheme
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -113,5 +116,11 @@ fun OnboardingScreen(
 @Preview
 @Composable
 fun OnboardingScreenPreview() {
-    OnboardingScreen()
+    AppTheme {
+        Surface(
+            color = MaterialTheme.colorScheme.background,
+        ) {
+            OnboardingScreen()
+        }
+    }
 }
