@@ -16,4 +16,3 @@ dependencyResolutionManagement {
 
 rootProject.name = "Fox Link"
 include(":app")
-include(":netbirdlib")

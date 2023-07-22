@@ -6,7 +6,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import tech.foxio.netbirdlib.NetbirdModule
+//import tech.foxio.netbirdlib.NetbirdModule
 import javax.inject.Singleton
 
 //@Module

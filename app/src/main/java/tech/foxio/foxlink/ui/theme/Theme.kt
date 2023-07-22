@@ -86,7 +86,7 @@ private val DarkColors = darkColorScheme(
 fun AppTheme(
     useDarkTheme: Boolean = isSystemInDarkTheme(),
     //跟随系统颜色变化 要求Android 12+
-    dynamicColor: Boolean = false,
+//    dynamicColor: Boolean = false,
     content: @Composable() () -> Unit
 ) {
 //    val colorScheme = when {
