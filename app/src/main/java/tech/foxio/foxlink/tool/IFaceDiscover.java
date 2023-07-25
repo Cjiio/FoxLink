@@ -10,7 +10,7 @@ class IFaceDiscover implements android.IFaceDiscover {
     public String iFaces() throws Exception {
         List<NetworkInterface> interfaces = Collections.list(NetworkInterface.getNetworkInterfaces());
 
-        StringBuilder sb = new StringBuilder("");
+        StringBuilder sb = new StringBuilder();
         for (NetworkInterface nif : interfaces) {
             try {
                 sb.append(String.format("%s %d %d %b %b %b %b %b |",

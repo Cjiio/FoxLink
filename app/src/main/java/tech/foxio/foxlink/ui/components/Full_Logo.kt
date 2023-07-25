@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.Dp
 import tech.foxio.foxlink.R
 
 @Composable
-public fun Full_Logo(size : Dp) {
+fun Full_Logo(size : Dp) {
     Column(
         modifier = Modifier
             .fillMaxSize(),

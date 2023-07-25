@@ -1,5 +1,6 @@
 package tech.foxio.foxlink.ui.screens.home
 
+import android.app.Activity
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -18,8 +19,11 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Send
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
@@ -29,24 +33,73 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import tech.foxio.foxlink.R
 import tech.foxio.foxlink.ui.theme.AppTheme
+import tech.foxio.foxlink.utils.NetbirdModule
 
 @Composable
 fun HomeScreen(
-//    homeViewModel: HomeViewModel = hiltViewModel()
+    homeViewModel: HomeViewModel = hiltViewModel()
 ) {
-//    val dataState by homeViewModel.dataState.collectAsState()
+    val dataState by homeViewModel.uiState.collectAsStateWithLifecycle()
+    val connectInfo by homeViewModel.connectInfo.collectAsStateWithLifecycle()
+    val timeState by homeViewModel.timeState.collectAsStateWithLifecycle()
+    val connectState = dataState.connectState
+    val tipsContent: String
+    val tipsIcon: ImageVector
+    val connectButtonBgColor: Color
+    val connectButtonColor: Color
+    val connectButtonIcon: Int
+
+    when (connectState) {
+        ConnectState.CONNECTED -> {
+            tipsContent = "Connected"
+            tipsIcon = Icons.Default.CheckCircle
+            connectButtonBgColor = MaterialTheme.colorScheme.onPrimaryContainer
+            connectButtonColor = MaterialTheme.colorScheme.primary
+            connectButtonIcon = R.drawable.connect_icon
+        }
+
+        ConnectState.DISCONNECTED -> {
+            tipsContent = "Top up to connect"
+            tipsIcon = Icons.Default.Notifications
+            connectButtonBgColor = MaterialTheme.colorScheme.surface
+            connectButtonColor = MaterialTheme.colorScheme.onSurface
+            connectButtonIcon = R.drawable.connect_icon
+        }
+
+        ConnectState.CONNECTING -> {
+            tipsContent = "Connecting"
+            tipsIcon = Icons.Default.Send
+            connectButtonBgColor = MaterialTheme.colorScheme.surface
+            connectButtonColor = MaterialTheme.colorScheme.onSurface
+            connectButtonIcon = R.drawable.connecting_icon
+        }
+
+        ConnectState.DISCONNECTING -> {
+            tipsContent = "Disconnecting"
+            tipsIcon = Icons.Default.Notifications
+            connectButtonBgColor = MaterialTheme.colorScheme.surface
+            connectButtonColor = MaterialTheme.colorScheme.onSurface
+            connectButtonIcon = R.drawable.connecting_icon
+        }
+    }
+
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
     Scaffold(
@@ -61,11 +114,16 @@ fun HomeScreen(
                     .padding(horizontal = 25.dp)
                     .padding(it)
             ) {
-                ConnectionTime()
-                ConnectionInfo()
+                ConnectionTime(timeState.formattedTime)
+                ConnectionInfo(connectInfo)
                 UpDownSpeed()
-                ConnectButton()
-                TipsView()
+                ConnectButton(
+                    homeViewModel,
+                    connectButtonBgColor,
+                    connectButtonColor,
+                    connectButtonIcon
+                )
+                TipsView(tipsContent, tipsIcon)
             }
         },
         drawerContent = {
@@ -146,7 +204,13 @@ fun DrawerContent(scaffoldState: ScaffoldState, scope: CoroutineScope) {
 }
 
 @Composable
-fun ConnectButton() {
+fun ConnectButton(
+    homeViewModel: HomeViewModel,
+    connectButtonBgColor: Color,
+    connectButtonColor: Color,
+    connectButtonIcon: Int
+) {
+    val context = LocalContext.current as Activity
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -155,26 +219,26 @@ fun ConnectButton() {
             .padding(top = 140.dp),
     ) {
         Surface(
-            color = MaterialTheme.colorScheme.surface,
+            color = connectButtonBgColor,
             shape = RoundedCornerShape(50.dp),
             modifier = Modifier.size(180.dp)
         ) {
             Surface(
                 onClick = {
 //                    netbirdModule.switchConnect(true)
-//                    if (NetbirdModule.hasVpnPermission(context)){
-//                        homeViewModel.sendUIIntent(HomeIntent.SwitchConnect)
-//                    }
+                    if (NetbirdModule.hasVpnPermission(context)) {
+                        homeViewModel.sendUIIntent(HomeIntent.SwitchConnect)
+                    }
                 },
                 shape = RoundedCornerShape(30.dp),
                 modifier = Modifier.padding(30.dp),
             ) {
                 Surface(
-                    color = MaterialTheme.colorScheme.onSurface, shape = MaterialTheme.shapes.small
+                    color = connectButtonColor, shape = MaterialTheme.shapes.small
                 ) {
                     Icon(
                         tint = MaterialTheme.colorScheme.onPrimary,
-                        painter = painterResource(id = R.drawable.connecting_icon),
+                        painter = painterResource(id = connectButtonIcon),
                         contentDescription = null,
                         modifier = Modifier
                             .padding(30.dp)
@@ -192,13 +256,13 @@ fun ConnectButtonPreview() {
         Surface(
             color = MaterialTheme.colorScheme.background,
         ) {
-            ConnectButton()
+//            ConnectButton()
         }
     }
 }
 
 @Composable
-fun TipsView() {
+fun TipsView(tipsContent: String, tipsIcon: ImageVector) {
     Row(
         modifier = Modifier
             .padding(vertical = 16.dp)
@@ -208,13 +272,13 @@ fun TipsView() {
         horizontalArrangement = Arrangement.Center
     ) {
         Icon(
-            painter = painterResource(id = R.drawable.line_hand_pointing_light),
+            imageVector = tipsIcon,
             contentDescription = null,
             tint = MaterialTheme.colorScheme.outline,
         )
         Spacer(modifier = Modifier.width(8.dp))
         Text(
-            text = "Tap to Connect",
+            text = tipsContent,
             color = MaterialTheme.colorScheme.outline,
         )
     }
@@ -227,7 +291,7 @@ fun TipsViewPreview() {
         Surface(
             color = MaterialTheme.colorScheme.background,
         ) {
-            TipsView()
+//            TipsView(connectState)
         }
     }
 }
@@ -266,7 +330,7 @@ fun SpeedView(
 }
 
 @Composable
-private fun ConnectionInfo() {
+private fun ConnectionInfo(connectInfo: ConnectInfo) {
     Surface(
         color = MaterialTheme.colorScheme.surface,
         shape = MaterialTheme.shapes.extraLarge,
@@ -295,14 +359,14 @@ private fun ConnectionInfo() {
                 verticalArrangement = Arrangement.Center,
             ) {
                 Text(
-                    text = "United States",
-                    style = MaterialTheme.typography.bodyLarge,
+                    text = connectInfo.deviceName,
+                    style = MaterialTheme.typography.titleSmall,
                     color = MaterialTheme.colorScheme.surfaceVariant
                 )
                 Spacer(modifier = Modifier.height(5.dp))
                 Text(
-                    text = "IP 37.120.202.186",
-                    style = MaterialTheme.typography.bodySmall,
+                    text = connectInfo.ip,
+                    style = MaterialTheme.typography.titleLarge,
                     color = MaterialTheme.colorScheme.surfaceVariant
                 )
             }
@@ -324,7 +388,7 @@ fun ConnectionInfoPreview() {
         Surface(
             color = MaterialTheme.colorScheme.background,
         ) {
-            ConnectionInfo()
+//            ConnectionInfo()
         }
     }
 }
@@ -361,7 +425,7 @@ fun UpDownSpeedPreview() {
 }
 
 @Composable
-private fun ConnectionTime() {
+private fun ConnectionTime(connectTime: String) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -375,7 +439,7 @@ private fun ConnectionTime() {
             color = MaterialTheme.colorScheme.outline
         )
         Text(
-            text = "00:30:27",
+            text = connectTime,
             style = MaterialTheme.typography.displaySmall,
             color = MaterialTheme.colorScheme.onPrimary
         )
@@ -389,7 +453,7 @@ fun ConnectionTimePreview() {
         Surface(
             color = MaterialTheme.colorScheme.background,
         ) {
-            ConnectionTime()
+//            ConnectionTime()
         }
     }
 }

@@ -10,7 +10,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SplashViewModel @Inject constructor(
-//    @ActivityContext private val activityContext: Context,
     private val dataStore: DataStore<Preferences>
 ) : ViewModel() {
 

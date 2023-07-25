@@ -77,7 +77,7 @@ public class VPNService extends VpnService {
     }
 
     private boolean hasVpnPermission(Activity context) {
-        Intent intentPrepare = VpnService.prepare(this);
+        Intent intentPrepare = VpnService.prepare(context);
         if (intentPrepare != null) {
             Log.d(LOGTAG, "open vpn permission dialog");
             context.startActivityForResult(intentPrepare, VPN_REQUEST_CODE);

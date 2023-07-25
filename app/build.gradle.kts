@@ -22,7 +22,7 @@ android {
             useSupportLibrary = true
         }
         buildConfigField("String", "DATA_BASE_NAME", "\"AppData.db\"")
-        buildConfigField("String", "DATA_STORE_NAME", "\"AppDataStore.db\"")
+        buildConfigField("String", "DATA_STORE_NAME", "\"AppDataStore\"")
     }
 
     buildTypes {
@@ -110,6 +110,7 @@ dependencies {
 
     implementation(libs.core.ktx)
     implementation(libs.lifecycle.runtime.ktx)
+    implementation(libs.lifecycle.runtime.compose)
     implementation(libs.activity.compose)
     implementation(platform(libs.compose.bom))
     implementation(libs.ui)
