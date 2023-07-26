@@ -41,7 +41,6 @@ fun SettingsScreen(
         "Show notification",
         "Switch block",
         "Imrpove connection stability",
-        "Term of Service",
         "Privacy Policy",
         "About"
     )
