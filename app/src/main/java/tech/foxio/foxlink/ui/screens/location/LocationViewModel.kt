@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
 @HiltViewModel
@@ -15,8 +16,7 @@ class LocationViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _dataState = MutableStateFlow(DataState())
-    val dataState: StateFlow<DataState>
-        get() = _dataState
+    val dataState: StateFlow<DataState> = _dataState.asStateFlow()
 
     fun sendUIIntent(locationIntent: LocationIntent) {
         when (locationIntent) {

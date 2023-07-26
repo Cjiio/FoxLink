@@ -22,6 +22,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -32,6 +34,7 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -47,6 +50,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import tech.foxio.foxlink.R
@@ -58,7 +62,7 @@ import java.util.UUID
 fun LocationScreen(
 //    locationViewModel: LocationViewModel = hiltViewModel()
 ) {
-//    val dataState by locationViewModel.dataState.collectAsState()
+//    val dataState by locationViewModel.dataState.collectAsStateWithLifecycle()
 //    val serverData = dataState.serverData
     val serverData: ArrayList<String> = arrayListOf(
         UUID.randomUUID().toString(),
@@ -252,63 +256,68 @@ class NoRippleInteractionSource : MutableInteractionSource {
     override fun tryEmit(interaction: Interaction) = true
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun HeadContent() {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween,
+    CenterAlignedTopAppBar(
+        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+            containerColor = MaterialTheme.colorScheme.background
+        ),
         modifier = Modifier
-            .padding(horizontal = 25.dp)
-            .padding(top = 50.dp)
-            .fillMaxWidth()
-    ) {
-        FilledIconButton(
-            onClick = { /*TODO*/ },
-            shape = MaterialTheme.shapes.large,
-        ) {
-            Surface(
-                color = MaterialTheme.colorScheme.primary,
-                shape = MaterialTheme.shapes.small,
+            .padding(horizontal = 25.dp),
+        title = {
+            Text(
+                text = "Location",
+                color = MaterialTheme.colorScheme.onPrimary,
+                style = MaterialTheme.typography.titleLarge,
+            )
+        },
+        navigationIcon = {
+            FilledIconButton(
                 modifier = Modifier
-                    .size(40.dp)
-                    .clickable {
-
-                    }
+                    .padding(),
+                onClick = { /*TODO*/ },
+                shape = MaterialTheme.shapes.large,
             ) {
-                Icon(
-                    imageVector = Icons.Default.KeyboardArrowLeft,
-                    contentDescription = null,
+                Surface(
+                    onClick = {
+                    },
+                    color = MaterialTheme.colorScheme.primary,
+                    shape = MaterialTheme.shapes.small,
                     modifier = Modifier
-                        .padding(6.dp),
-                    tint = MaterialTheme.colorScheme.onSecondary
-                )
+                        .size(40.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.KeyboardArrowLeft,
+                        contentDescription = null,
+                        modifier = Modifier.padding(6.dp),
+                        tint = MaterialTheme.colorScheme.onSecondary
+                    )
+                }
+            }
+        },
+        actions = {
+            FilledIconButton(
+                onClick = { /*TODO*/ },
+                shape = MaterialTheme.shapes.large,
+            ) {
+                Surface(
+                    color = MaterialTheme.colorScheme.primary,
+                    shape = MaterialTheme.shapes.small,
+                    modifier = Modifier
+                        .size(40.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Refresh,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .padding(6.dp),
+                        tint = MaterialTheme.colorScheme.onSecondary
+                    )
+                }
             }
         }
-        Text(
-            text = "Location",
-            style = MaterialTheme.typography.titleLarge,
-            color = MaterialTheme.colorScheme.onPrimary
-        )
-        FilledIconButton(
-            onClick = { /*TODO*/ },
-            shape = MaterialTheme.shapes.large,
-        ) {
-            Surface(
-                color = MaterialTheme.colorScheme.primary,
-                shape = MaterialTheme.shapes.small,
-                modifier = Modifier
-                    .size(40.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Refresh,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .padding(6.dp),
-                    tint = MaterialTheme.colorScheme.onSecondary
-                )
-            }
-        }
-    }
+    )
 }
 
 @Preview

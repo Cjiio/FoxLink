@@ -7,6 +7,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import dagger.hilt.android.AndroidEntryPoint
 import tech.foxio.foxlink.ui.screens.home.HomeScreen
+import tech.foxio.foxlink.ui.screens.location.LocationScreen
+import tech.foxio.foxlink.ui.screens.settings.SettingsScreen
 import tech.foxio.foxlink.ui.theme.AppTheme
 
 @AndroidEntryPoint
@@ -18,7 +20,7 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     color = MaterialTheme.colorScheme.background,
                 ) {
-                    HomeScreen()
+                    SettingsScreen()
                 }
             }
         }

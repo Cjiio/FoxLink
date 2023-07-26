@@ -20,18 +20,23 @@ import androidx.compose.material.ScaffoldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.Button
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
@@ -458,65 +463,77 @@ fun ConnectionTimePreview() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun HeadContent(
     scaffoldState: ScaffoldState,
     scope: CoroutineScope
 ) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween,
+    CenterAlignedTopAppBar(
+        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+            containerColor = MaterialTheme.colorScheme.background
+        ),
         modifier = Modifier
-            .padding(horizontal = 25.dp)
-            .padding(top = 50.dp)
-            .fillMaxWidth()
-    ) {
-        FilledIconButton(
-            onClick = { /*TODO*/ },
-            shape = MaterialTheme.shapes.large,
-        ) {
-            Surface(
+            .padding(horizontal = 25.dp),
+        title = {
+            Text(
+                text = "Location",
+                color = MaterialTheme.colorScheme.onPrimary,
+                style = MaterialTheme.typography.titleLarge,
+            )
+        },
+        navigationIcon = {
+            FilledIconButton(
+                modifier = Modifier
+                    .padding(),
                 onClick = {
                     scope.launch {
                         scaffoldState.drawerState.open()
                     }
                 },
-                color = MaterialTheme.colorScheme.primary,
-                shape = MaterialTheme.shapes.small,
-                modifier = Modifier
-                    .size(40.dp)
+                shape = MaterialTheme.shapes.large,
             ) {
-                Icon(
-                    imageVector = Icons.Default.Menu,
-                    contentDescription = null,
-                    modifier = Modifier.padding(6.dp),
-                    tint = MaterialTheme.colorScheme.onSecondary
-                )
+                Surface(
+                    color = MaterialTheme.colorScheme.primary,
+                    shape = MaterialTheme.shapes.small,
+                    modifier = Modifier
+                        .size(40.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Menu,
+                        contentDescription = null,
+                        modifier = Modifier.padding(6.dp),
+                        tint = MaterialTheme.colorScheme.onSecondary
+                    )
+                }
+            }
+        },
+        actions = {
+            FilledIconButton(
+                onClick = {
+//                    scope.launch {
+//                        scaffoldState.drawerState.open()
+//                    }
+                },
+                shape = MaterialTheme.shapes.large,
+            ) {
+                Surface(
+                    color = MaterialTheme.colorScheme.primary,
+                    shape = MaterialTheme.shapes.small,
+                    modifier = Modifier
+                        .size(40.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.fill_crown_icon),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .padding(6.dp),
+                        tint = MaterialTheme.colorScheme.onSecondary
+                    )
+                }
             }
         }
-        Text(
-            text = stringResource(id = R.string.app_name),
-            style = MaterialTheme.typography.titleLarge,
-            color = MaterialTheme.colorScheme.onPrimary
-        )
-        FilledIconButton(
-            onClick = { /*TODO*/ },
-            shape = MaterialTheme.shapes.large,
-        ) {
-            Surface(
-                color = MaterialTheme.colorScheme.primary,
-                shape = MaterialTheme.shapes.small,
-                modifier = Modifier.size(40.dp)
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.fill_crown_icon),
-                    contentDescription = null,
-                    modifier = Modifier.padding(6.dp),
-                    tint = MaterialTheme.colorScheme.onSecondary
-                )
-            }
-        }
-    }
+    )
 }
 
 @Preview

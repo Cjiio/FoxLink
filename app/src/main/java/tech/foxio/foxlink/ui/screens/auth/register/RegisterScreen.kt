@@ -19,6 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.paint
@@ -28,6 +29,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import tech.foxio.foxlink.R
 import tech.foxio.foxlink.ui.screens.connectDetail.ConnectDetailScreen
 import tech.foxio.foxlink.ui.theme.AppTheme
@@ -37,7 +40,7 @@ import tech.foxio.foxlink.ui.theme.AppTheme
 fun RegisterScreen(
 //    registerViewModel: RegisterViewModel = hiltViewModel()
 ) {
-//    val dataState by registerViewModel.dataState.collectAsState()
+//    val dataState by registerViewModel.dataState.collectAsStateWithLifecycle()
 //    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     Column(
         modifier = Modifier

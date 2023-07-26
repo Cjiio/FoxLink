@@ -18,18 +18,27 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.launch
 import tech.foxio.foxlink.R
 import tech.foxio.foxlink.ui.theme.AppTheme
 
@@ -37,7 +46,7 @@ import tech.foxio.foxlink.ui.theme.AppTheme
 fun ConnectDetailScreen(
 //    connectDetailViewModel: ConnectDetailViewModel = hiltViewModel()
 ) {
-//    val dataState by connectDetailViewModel.dataState.collectAsState()
+//    val dataState by connectDetailViewModel.dataState.collectAsStateWithLifecycle()
     Scaffold(
         backgroundColor = MaterialTheme.colorScheme.background,
         topBar = { HeadContent() },
@@ -136,52 +145,46 @@ private fun Content(paddingValues: PaddingValues) {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun HeadContent() {
-    Box(
+    CenterAlignedTopAppBar(
+        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+            containerColor = MaterialTheme.colorScheme.background
+        ),
         modifier = Modifier
-            .padding(horizontal = 25.dp)
-            .padding(top = 50.dp)
-            .height(50.dp)
-            .fillMaxWidth()
-    ) {
-        FilledIconButton(
-            modifier = Modifier
-                .align(Alignment.CenterStart),
-            onClick = { /*TODO*/ },
-            shape = MaterialTheme.shapes.large,
-        ) {
-            Surface(
-                color = MaterialTheme.colorScheme.onSurface,
-                shape = MaterialTheme.shapes.small,
+            .padding(horizontal = 25.dp),
+        title = {
+            Text(
+                text = "Location",
+                color = MaterialTheme.colorScheme.onPrimary,
+                style = MaterialTheme.typography.titleLarge,
+            )
+        },
+        navigationIcon = {
+            FilledIconButton(
                 modifier = Modifier
-                    .size(40.dp)
-                    .clickable {
-
-                    }
+                    .padding(),
+                onClick = {
+                },
+                shape = MaterialTheme.shapes.large,
             ) {
-                Icon(
-                    imageVector = Icons.Default.KeyboardArrowLeft,
-                    contentDescription = null,
+                Surface(
+                    color = MaterialTheme.colorScheme.primary,
+                    shape = MaterialTheme.shapes.small,
                     modifier = Modifier
-                        .padding(6.dp),
-                    tint = MaterialTheme.colorScheme.onSecondary
-                )
+                        .size(40.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.KeyboardArrowLeft,
+                        contentDescription = null,
+                        modifier = Modifier.padding(6.dp),
+                        tint = MaterialTheme.colorScheme.onSecondary
+                    )
+                }
             }
         }
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center,
-            modifier = Modifier
-                .fillMaxSize()
-        ) {
-            Text(
-                text = "Connection Report",
-                style = MaterialTheme.typography.titleLarge,
-                color = MaterialTheme.colorScheme.onPrimary
-            )
-        }
-    }
+    )
 }
 
 @Preview

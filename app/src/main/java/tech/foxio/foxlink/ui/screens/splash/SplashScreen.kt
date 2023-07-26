@@ -15,6 +15,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import tech.foxio.foxlink.R
 import tech.foxio.foxlink.ui.components.Full_Logo
 import tech.foxio.foxlink.ui.screens.home.HomeScreen
@@ -24,7 +25,7 @@ import tech.foxio.foxlink.ui.theme.AppTheme
 fun SplashScreen(
 //    splashViewModel: SplashViewModel = hiltViewModel()
 ) {
-//    val dataState by splashViewModel.dataState.collectAsState()
+//    val dataState by splashViewModel.dataState.collectAsStateWithLifecycle()
     Column(
         modifier = Modifier
             .paint(

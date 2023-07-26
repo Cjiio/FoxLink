@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.accompanist.pager.HorizontalPagerIndicator
 import kotlinx.coroutines.launch
 import tech.foxio.foxlink.R
@@ -36,7 +37,7 @@ import tech.foxio.foxlink.ui.theme.AppTheme
 fun OnboardingScreen(
 //    onboardingViewModel: OnboardingViewModel = hiltViewModel()
 ) {
-//    val dataState by onboardingViewModel.dataState.collectAsState()
+//    val dataState by onboardingViewModel.dataState.collectAsStateWithLifecycle()
 //    val onboardingData = dataState.onboardingData
     val onboardingData: List<OnboardingData> = listOf(
         OnboardingData(
