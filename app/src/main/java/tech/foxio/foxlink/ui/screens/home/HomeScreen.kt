@@ -26,6 +26,7 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Send
+import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -163,7 +164,7 @@ fun DrawerContent(scaffoldState: ScaffoldState, scope: CoroutineScope) {
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 25.dp)
+            .padding(horizontal = 40.dp)
             .padding(top = 100.dp)
     ) {
         Icon(
@@ -185,15 +186,14 @@ fun DrawerContent(scaffoldState: ScaffoldState, scope: CoroutineScope) {
             content = {
                 items(5) {
                     Row(
-                        horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
                             .fillMaxWidth(),
                     ) {
                         Icon(
-                            imageVector = Icons.Default.AccountCircle,
+                            imageVector = Icons.Outlined.AccountCircle,
                             contentDescription = null,
-                            tint = MaterialTheme.colorScheme.primary
+                            tint = MaterialTheme.colorScheme.onPrimary
                         )
                         Spacer(modifier = Modifier.width(20.dp))
                         Text(

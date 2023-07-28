@@ -1,3 +1,7 @@
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.text.SimpleDateFormat
+import java.util.Date
 @Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
 plugins {
     alias(libs.plugins.androidApplication)
@@ -14,8 +18,8 @@ android {
         applicationId = "tech.foxio.foxlink"
         minSdk = 24
         targetSdk = 33
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = getVersionCode()
+        versionName = getVersionName()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -54,7 +58,44 @@ android {
         }
     }
 }
+fun getVersionCode(): Int {
+    val majorNumber = 1
+    val minorNumber = 0
+    val revisionNumber = getRevisionNumber()
 
+    return majorNumber * 1000000 + minorNumber * 10000 + revisionNumber
+}
+
+fun getVersionName(): String {
+    val majorNumber = 1
+    val minorNumber = 0
+    val revisionNumber = getRevisionNumber()
+    val revisionDescription = getRevisionDescription()
+
+    return "$majorNumber.$minorNumber.$revisionNumber.$revisionDescription"
+}
+
+fun getRevisionNumber(): Int {
+    val processBuilder = ProcessBuilder("git", "rev-list", "HEAD", "--count")
+    val process = processBuilder.start()
+    val reader = BufferedReader(InputStreamReader(process.inputStream))
+    val result = reader.readLine()?.toIntOrNull() ?: 0
+    process.waitFor()
+    return result
+}
+
+fun getRevisionDescription(): String {
+    val processBuilder = ProcessBuilder("git", "describe", "--always")
+    val process = processBuilder.start()
+    val reader = BufferedReader(InputStreamReader(process.inputStream))
+    val result = reader.readLine()?.trim() ?: SimpleDateFormat("yyMMdd").format(Date())
+    process.waitFor()
+    return if (result.isBlank()) {
+        SimpleDateFormat("yyMMdd").format(Date())
+    } else {
+        result.substring(result.length - 6)
+    }
+}
 dependencies {
     implementation(fileTree("libs"))
     //导入netbird模块

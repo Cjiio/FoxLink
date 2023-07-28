@@ -14,14 +14,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import tech.foxio.foxlink.R
 
 @Composable
 fun Full_Logo(size : Dp) {
     Column(
-        modifier = Modifier
-            .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -37,4 +37,10 @@ fun Full_Logo(size : Dp) {
             fontWeight = FontWeight.Bold,
         )
     }
+}
+
+@Preview
+@Composable
+fun Full_LogoPreview() {
+    Full_Logo(200.dp)
 }

@@ -12,7 +12,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
@@ -23,7 +22,6 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -50,7 +48,7 @@ fun SettingsScreen(
     ) {
         Scaffold(
             topBar = {
-                SettingsScreenContent()
+                SettingsScreenHeadContent()
             },
             content = { padding ->
                 Column(
@@ -137,7 +135,7 @@ private fun PreviewSettingsScreen() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun SettingsScreenContent() {
+private fun SettingsScreenHeadContent() {
     CenterAlignedTopAppBar(
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
             containerColor = MaterialTheme.colorScheme.background
@@ -179,14 +177,14 @@ private fun SettingsScreenContent() {
     )
 }
 
-@Preview(name = "SettingsScreenContent")
+@Preview(name = "SettingsScreenHeadContent")
 @Composable
-private fun PreviewSettingsScreenContent() {
+private fun PreviewSettingsScreenHeadContent() {
     AppTheme {
         Surface(
             color = MaterialTheme.colorScheme.background,
         ) {
-            SettingsScreenContent()
+            SettingsScreenHeadContent()
         }
     }
 }
