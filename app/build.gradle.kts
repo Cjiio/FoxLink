@@ -1,7 +1,10 @@
+import com.android.build.gradle.internal.api.ApkVariantOutputImpl
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Properties
+
 @Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
 plugins {
     alias(libs.plugins.androidApplication)
@@ -10,7 +13,25 @@ plugins {
     id("com.google.dagger.hilt.android")
 }
 
+
 android {
+    //读取本地配置文件
+    val localProperties = Properties()
+    localProperties.load(rootProject.file("local.properties").inputStream())
+    val keystorePath = localProperties.getProperty("keystore.path")
+    val keystorePassword = localProperties.getProperty("keystore.password")
+    val keystoreAlias = localProperties.getProperty("keystore.alias")
+    val keystoreAliasPassword = localProperties.getProperty("keystore.alias_password")
+
+    signingConfigs {
+        create("release") {
+            storeFile = file(keystorePath)
+            storePassword = keystorePassword
+            keyAlias = keystoreAlias
+            keyPassword = keystoreAliasPassword
+        }
+    }
+
     namespace = "tech.foxio.foxlink"
     compileSdk = 33
 
@@ -25,17 +46,27 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+        //ndk配置
+        ndk {
+            abiFilters += "arm64-v8a"
+            abiFilters += "armeabi-v7a"
+        }
+        //BuildConfig配置
         buildConfigField("String", "DATA_BASE_NAME", "\"AppData.db\"")
         buildConfigField("String", "DATA_STORE_NAME", "\"AppDataStore\"")
+        buildConfigField("String", "APP_WRITE_BASE_URL", "\"https://app.foxio.tech/\"")
+        buildConfigField("String", "APP_WRITE_PROJECT_ID", "\"64be39e09e155ffc6946\"")
     }
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("release")
         }
     }
     compileOptions {
@@ -55,6 +86,19 @@ android {
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        }
+    }
+    //配置编译后的apk文件名
+    applicationVariants.all {
+        val buildType = this.buildType.name
+        outputs.all {
+            if (this is ApkVariantOutputImpl) {
+                if (buildType == "debug") {
+                    this.outputFileName = "FoxLink-${versionName}-${versionCode}-$buildType.apk"
+                } else if (buildType == "release") {
+                    this.outputFileName = "FoxLink-${versionName}-${versionCode}-$buildType.apk"
+                }
+            }
         }
     }
 }
@@ -98,8 +142,6 @@ fun getRevisionDescription(): String {
 }
 dependencies {
     implementation(fileTree("libs"))
-    //导入netbird模块
-//    implementation(project(":netbirdlib"))
 
     //==================== Logging =================================
     val logVersion = "2.6.9"
@@ -148,6 +190,9 @@ dependencies {
 
     //==================== Image Loading ============================
     implementation("io.coil-kt:coil-compose:2.4.0")
+
+    //==================== AppWrite ============================
+    implementation("io.appwrite:sdk-for-android:2.0.0")
 
     implementation(libs.core.ktx)
     implementation(libs.lifecycle.runtime.ktx)
