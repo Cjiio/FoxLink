@@ -145,54 +145,83 @@ dependencies {
 
     //==================== Logging =================================
     val logVersion = "2.6.9"
-    implementation("com.github.fengzhizi715.SAF-Kotlin-log:core:$logVersion")
-    implementation("com.github.fengzhizi715.SAF-Kotlin-log:file:$logVersion")
-    implementation("com.github.fengzhizi715.SAF-Kotlin-log:okhttp:$logVersion")
-    implementation("com.github.fengzhizi715.SAF-Kotlin-log:fastjson:$logVersion")
-    implementation("com.github.fengzhizi715.SAF-Kotlin-log:gson:$logVersion")
+    //noinspection UseTomlInstead
     implementation("com.github.fengzhizi715.SAF-Kotlin-log:debug_view:$logVersion")
+    //noinspection UseTomlInstead
     implementation("com.github.fengzhizi715.SAF-Kotlin-log:extension:$logVersion")
+    //noinspection UseTomlInstead
+    implementation("com.github.fengzhizi715.SAF-Kotlin-log:fastjson:$logVersion")
+    //noinspection UseTomlInstead
+    implementation("com.github.fengzhizi715.SAF-Kotlin-log:okhttp:$logVersion")
+    //noinspection UseTomlInstead
+    implementation("com.github.fengzhizi715.SAF-Kotlin-log:core:$logVersion")
+    //noinspection UseTomlInstead
+    implementation("com.github.fengzhizi715.SAF-Kotlin-log:file:$logVersion")
+    //noinspection UseTomlInstead
+    implementation("com.github.fengzhizi715.SAF-Kotlin-log:gson:$logVersion")
 
     //==================== Networking =============================
     val retrofitVersion = "2.9.0"
     val okhttpVersion = "4.11.0"
-    implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
+    //noinspection UseTomlInstead
     implementation("com.squareup.retrofit2:converter-moshi:$retrofitVersion")
-    implementation("com.squareup.okhttp3:okhttp:$okhttpVersion")
+    //noinspection UseTomlInstead
     implementation("com.squareup.okhttp3:logging-interceptor:$okhttpVersion")
+    //noinspection UseTomlInstead
+    implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
+    //noinspection UseTomlInstead
+    implementation("com.squareup.okhttp3:okhttp:$okhttpVersion")
 
     //==================== Dependency Injection ==================
     val hiltVersion = "2.47"
+    //noinspection UseTomlInstead
     implementation("com.google.dagger:hilt-android:$hiltVersion")
-    kapt("com.google.dagger:hilt-compiler:$hiltVersion")
+    //noinspection UseTomlInstead
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+    //noinspection UseTomlInstead
+    kapt("com.google.dagger:hilt-compiler:$hiltVersion")
 
     //==================== Database ==============================
     val roomVersion = "2.5.2"
+    //noinspection UseTomlInstead
     implementation("androidx.room:room-runtime:$roomVersion")
-    kapt("androidx.room:room-compiler:$roomVersion")
+    //noinspection UseTomlInstead
     implementation("androidx.room:room-ktx:$roomVersion")
+    //noinspection UseTomlInstead
+    kapt("androidx.room:room-compiler:$roomVersion")
 
     //==================== Datastore ==============================
+    //noinspection UseTomlInstead
     implementation("androidx.datastore:datastore-preferences-core:1.0.0")
+    //noinspection UseTomlInstead
     implementation("androidx.datastore:datastore-preferences:1.0.0")
 
     //==================== Pager ==============================
     val pagerVersion = "0.30.1"
-    implementation("com.google.accompanist:accompanist-pager:$pagerVersion")
+    //noinspection UseTomlInstead
     implementation("com.google.accompanist:accompanist-pager-indicators:$pagerVersion")
-
-    //==================== Navigation ===============================
-    implementation("androidx.navigation:navigation-compose:2.6.0")
+    //noinspection UseTomlInstead
+    implementation("com.google.accompanist:accompanist-pager:$pagerVersion")
 
     //==================== Memory Leak Detection ====================
+    //noinspection UseTomlInstead
     debugImplementation("com.squareup.leakcanary:leakcanary-android:2.12")
 
-    //==================== Image Loading ============================
-    implementation("io.coil-kt:coil-compose:2.4.0")
+    //==================== WebView ============================
+    //noinspection UseTomlInstead
+    implementation("com.google.accompanist:accompanist-webview:0.30.1")
+
+    //==================== Navigation ===============================
+    //noinspection UseTomlInstead
+    implementation("androidx.navigation:navigation-compose:2.6.0")
 
     //==================== AppWrite ============================
+    //noinspection UseTomlInstead
     implementation("io.appwrite:sdk-for-android:2.0.0")
+
+    //==================== Image Loading ============================
+    //noinspection UseTomlInstead
+    implementation("io.coil-kt:coil-compose:2.4.0")
 
     implementation(libs.core.ktx)
     implementation(libs.lifecycle.runtime.ktx)

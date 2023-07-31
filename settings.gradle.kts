@@ -14,5 +14,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Fox Link"
+rootProject.name = "FoxLink"
 include(":app")
