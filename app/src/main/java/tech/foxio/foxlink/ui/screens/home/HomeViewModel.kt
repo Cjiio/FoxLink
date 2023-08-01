@@ -1,11 +1,14 @@
 package tech.foxio.foxlink.ui.screens.home
 
 import android.ConnectionListener
+import android.ErrListener
+import android.SSOListener
 import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.safframework.log.L
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -54,19 +57,73 @@ class HomeViewModel @Inject constructor(
     }
 
     init {
-        NetbirdModule.setConnectionListener(MyConnectionListener(_connectInfo,_uiState, _timeState))
+        NetbirdModule.setConnectionListener(
+            MyConnectionListener(
+                _connectInfo,
+                _uiState,
+                _timeState
+            )
+        )
         NetbirdModule.setServiceStateListener(MyServiceStateListener(_uiState, _timeState))
         NetbirdModule.startService()
     }
 
     fun sendUIIntent(homeIntent: HomeIntent) {
         when (homeIntent) {
-            is HomeIntent.SwitchConnect -> switchConnect()
+            is HomeIntent.SwitchConnect -> {
+                switchConnect()
+            }
+
+            is HomeIntent.CheckServer -> {
+                checkServer(homeIntent.url)
+            }
+
+            is HomeIntent.ChangeServer -> {
+                changeServer(homeIntent.url, homeIntent.key)
+            }
+        }
+    }
+
+    private fun checkServer(
+        url: String,
+        ssoListener: SSOListener = CheckServerSSOListener()
+    ) {
+        NetbirdModule.CheckServer(url, ssoListener)
+    }
+
+    class CheckServerSSOListener : SSOListener {
+        override fun onError(e: Exception) {
+            L.d("e")
+        }
+
+        override fun onSuccess(result: Boolean) {
+            L.d(result.toString())
+        }
+    }
+
+    fun changeServer(
+        url: String,
+        key: String,
+        errListener: ErrListener = ChangeServerErrListener()
+    ) {
+        NetbirdModule.ChangeServer(url, key, errListener)
+    }
+
+    class ChangeServerErrListener : ErrListener {
+        private val TAG = "ChangeServerErrListener"
+        override fun onError(e: Exception) {
+            L.d(TAG, e.toString())
+        }
+
+        override fun onSuccess() {
+            L.d(TAG, "onSuccess")
         }
     }
 
     private fun switchConnect() {
-        if (_uiState.value.connectState == ConnectState.CONNECTING || _uiState.value.connectState == ConnectState.DISCONNECTING) {
+        if (_uiState.value.connectState == ConnectState.CONNECTING ||
+            _uiState.value.connectState == ConnectState.DISCONNECTING
+        ) {
             return
         }
         when (isConnected) {

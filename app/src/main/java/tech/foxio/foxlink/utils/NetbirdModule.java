@@ -1,8 +1,12 @@
 package tech.foxio.foxlink.utils;
 
 
+import android.Android;
 import android.ConnectionListener;
+import android.ErrListener;
 import android.PeerInfoArray;
+import android.Preferences;
+import android.SSOListener;
 import android.URLOpener;
 import android.app.Activity;
 import android.content.ComponentName;
@@ -13,6 +17,9 @@ import android.net.VpnService;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.safframework.log.L;
+
+import tech.foxio.foxlink.tool.DeviceName;
 import tech.foxio.foxlink.tool.ServiceStateListener;
 import tech.foxio.foxlink.tool.VPNService;
 
@@ -56,12 +63,58 @@ public class NetbirdModule {
         NetbirdModule.connectionListener = connectionListener;
     }
 
+    public static void setPreShareKey(Activity activity, String preShareKey) {
+        Preferences preferences = new Preferences(tech.foxio.foxlink.tool.Preferences.configFile(activity));
+        preferences.setPreSharedKey(preShareKey);
+    }
+
+    public static String inUsePreShareKey(Activity activity) {
+        Preferences preferences = new Preferences(tech.foxio.foxlink.tool.Preferences.configFile(activity));
+        String preShareKey = null;
+        try {
+            preShareKey = preferences.getPreSharedKey();
+            if (!preShareKey.trim().isEmpty()) {
+                return preShareKey;
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return "";
+    }
+
+    //检查服务器
+    public static void CheckServer(
+            String url,
+            SSOListener ssoListener
+    ) {
+        try {
+            Android.newAuth(tech.foxio.foxlink.tool.Preferences.configFile(instance.context), url)
+                    .saveConfigIfSSOSupported(ssoListener);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    //更改服务器
+    public static void ChangeServer(
+            String url,
+            String key,
+            ErrListener errListener
+    ) {
+        try {
+            Android.newAuth(tech.foxio.foxlink.tool.Preferences.configFile(instance.context), url)
+                    .loginWithSetupKeyAndSaveConfig(errListener, key, DeviceName.getDeviceName());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public static PeerInfoArray getPeers() {
         return mBinder.peersInfo();
     }
 
     public static void startService() {
-        Log.d(LOG_TAG, "try to start service");
+        L.d(LOG_TAG, "try to start service");
         if (instance == null) {
             throw new IllegalStateException("NetbirdModule has not been initialized.");
         }

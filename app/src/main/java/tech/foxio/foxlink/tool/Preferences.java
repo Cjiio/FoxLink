@@ -1,8 +1,7 @@
 package tech.foxio.foxlink.tool;
 
-import android.content.Context;
-
 import android.Android;
+import android.content.Context;
 
 public class Preferences {
 
@@ -11,6 +10,6 @@ public class Preferences {
    }
 
    public static String configFile(Context context){
-       return context.getFilesDir().getPath() + "/netbird.cfg";
+       return context.getFilesDir().getPath() + "/foxlink.cfg";
    }
 }
