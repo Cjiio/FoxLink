@@ -6,22 +6,28 @@ import androidx.activity.compose.setContent
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import dagger.hilt.android.AndroidEntryPoint
-import tech.foxio.foxlink.ui.screens.feedback.FeedbackScreen
+import tech.foxio.foxlink.ui.screens.home.HomeScreen
 import tech.foxio.foxlink.ui.theme.AppTheme
+import tech.foxio.foxlink.utils.NetbirdModule
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        NetbirdModule.Init(this)
         setContent {
             AppTheme {
                 Surface(
                     color = MaterialTheme.colorScheme.background,
                 ) {
-                    FeedbackScreen()
+                    HomeScreen()
                 }
             }
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        NetbirdModule.Destroy()
+    }
 }

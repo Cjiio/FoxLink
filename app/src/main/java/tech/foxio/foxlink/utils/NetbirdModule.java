@@ -9,10 +9,9 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.net.VpnService;
 import android.os.IBinder;
 import android.util.Log;
-
-import androidx.annotation.NonNull;
 
 import tech.foxio.foxlink.tool.ServiceStateListener;
 import tech.foxio.foxlink.tool.VPNService;
@@ -27,10 +26,12 @@ public class NetbirdModule {
     public static NetbirdModule instance;
     public Context context;
 
-    public static synchronized void Init(Context context) {
-        if (instance == null) {
-            instance = new NetbirdModule(context);
-        }
+    public NetbirdModule(Activity activity) {
+        Log.d(LOG_TAG, "init");
+        this.context = activity.getApplicationContext();
+        urlOpener = new MyURLOpener();
+        serviceIPC = new MyServiceConnection();
+        mBinder = new VPNService().new MyLocalBinder();
     }
 
     public static void Destroy() {
@@ -41,14 +42,10 @@ public class NetbirdModule {
         }
     }
 
-    public NetbirdModule(Context context) {
-        Log.d(LOG_TAG, "init");
-        this.context = context.getApplicationContext();
-        urlOpener = new MyURLOpener();
-        serviceIPC = new MyServiceConnection();
-//        serviceStateListener = new MyServiceStateListener();
-//        connectionListener = new MyConnectionListener();
-        mBinder = new VPNService().new MyLocalBinder();
+    public static synchronized void Init(Activity activity) {
+        if (instance == null) {
+            instance = new NetbirdModule(activity);
+        }
     }
 
     public static void setServiceStateListener(ServiceStateListener serviceStateListener) {
@@ -57,7 +54,6 @@ public class NetbirdModule {
 
     public static void setConnectionListener(ConnectionListener connectionListener) {
         NetbirdModule.connectionListener = connectionListener;
-//        mBinder.setConnectionStateListener(connectionListener);
     }
 
     public static PeerInfoArray getPeers() {
@@ -70,7 +66,7 @@ public class NetbirdModule {
             throw new IllegalStateException("NetbirdModule has not been initialized.");
         }
         Intent intent = new Intent(instance.context, VPNService.class);
-        intent.setAction(VPNService.INTENT_ACTION_START);
+        intent.setAction(VpnService.SERVICE_INTERFACE);
         instance.context.startService(intent);
         instance.bindToService();
     }
@@ -104,14 +100,14 @@ public class NetbirdModule {
         return mBinder.hasVpnPermission(activity);
     }
 
-/*    public void unbindFromServiceAfterCancel() {
-//        Log.d(LOG_TAG, "unbindFromServiceAfterCancel");
-//        if (mBinder == null) {
-//            return;
-//        }
-//        unBindFromService();
-//        mBinder = null;
-//    }*/
+    public void unbindFromServiceAfterCancel() {
+        Log.d(LOG_TAG, "unbindFromServiceAfterCancel");
+        if (mBinder == null) {
+            return;
+        }
+        unBindFromService();
+        mBinder = null;
+    }
 
     private void unBindFromService() {
         Log.d(LOG_TAG, "unBindFromService");
@@ -120,60 +116,10 @@ public class NetbirdModule {
         context.unbindService(serviceIPC);
     }
 
-    private static class MyServiceStateListener implements ServiceStateListener {
-
-        @Override
-        public void onStarted() {
-            Log.d(LOG_TAG, "onStarted");
-        }
-
-        @Override
-        public void onStopped() {
-            Log.d(LOG_TAG, "STATE: ServiceStateListener stopped");
-        }
-
-        @Override
-        public void onError(String msg) {
-            Log.d(LOG_TAG, "onError " + msg);
-        }
-    }
-
     private static class MyURLOpener implements URLOpener {
         @Override
         public void open(String s) {
             Log.d(LOG_TAG, "open " + s);
-        }
-    }
-
-    private static class MyConnectionListener implements ConnectionListener {
-        @Override
-        public void onAddressChanged(String s, String s1) {
-            Log.d(LOG_TAG, "onAddressChanged " + s + " " + s1);
-        }
-
-        @Override
-        public void onConnected() {
-            Log.d(LOG_TAG, "STATE: ConnectionListener connected");
-        }
-
-        @Override
-        public void onConnecting() {
-            Log.d(LOG_TAG, "STATE: ConnectionListener connecting");
-        }
-
-        @Override
-        public void onDisconnected() {
-            Log.d(LOG_TAG, "STATE: ConnectionListener disconnected");
-        }
-
-        @Override
-        public void onDisconnecting() {
-            Log.d(LOG_TAG, "STATE: ConnectionListener disconnecting");
-        }
-
-        @Override
-        public void onPeersListChanged(long l) {
-            Log.d(LOG_TAG, "STATE: ConnectionListener  " + l);
         }
     }
 

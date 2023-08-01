@@ -1,9 +1,9 @@
 package tech.foxio.foxlink.ui.screens.onboarding
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -16,20 +16,15 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.accompanist.pager.HorizontalPagerIndicator
 import kotlinx.coroutines.launch
 import tech.foxio.foxlink.R
 import tech.foxio.foxlink.ui.components.OnboardingUI
-import tech.foxio.foxlink.ui.screens.splash.SplashScreen
 import tech.foxio.foxlink.ui.theme.AppTheme
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -95,7 +90,7 @@ fun OnboardingScreen(
             },
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
-                .height(60.dp)
+                .defaultMinSize(minHeight = 50.dp)
                 .padding(horizontal = 25.dp)
                 .fillMaxWidth()
         ) {

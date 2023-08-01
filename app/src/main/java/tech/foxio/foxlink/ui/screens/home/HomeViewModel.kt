@@ -24,7 +24,7 @@ class HomeViewModel @Inject constructor(
     private val dataStore: DataStore<Preferences>
 ) : ViewModel() {
 
-    private var isConnecting: Boolean = false
+    private var isConnected: Boolean = false
 
     private val _uiState = MutableStateFlow(UIState())
     val uiState: StateFlow<UIState> = _uiState.asStateFlow()
@@ -66,7 +66,10 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun switchConnect() {
-        when (isConnecting) {
+        if (_uiState.value.connectState == ConnectState.CONNECTING || _uiState.value.connectState == ConnectState.DISCONNECTING) {
+            return
+        }
+        when (isConnected) {
             true -> {
                 _uiState.update {
                     it.copy(connectState = ConnectState.DISCONNECTING)
@@ -81,7 +84,7 @@ class HomeViewModel @Inject constructor(
                 NetbirdModule.switchConnect(true)
             }
         }
-        isConnecting = !isConnecting
+        isConnected = !isConnected
     }
 
     private fun launchIO(block: suspend () -> Unit) {
