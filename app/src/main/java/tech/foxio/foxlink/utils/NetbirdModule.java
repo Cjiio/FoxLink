@@ -62,13 +62,18 @@ public class NetbirdModule {
         NetbirdModule.connectionListener = connectionListener;
     }
 
-    public static void setPreShareKey(Activity activity, String preShareKey) {
-        Preferences preferences = new Preferences(tech.foxio.foxlink.tool.Preferences.configFile(activity));
+    public static void setPreShareKey(String preShareKey) {
+        Preferences preferences = new Preferences(tech.foxio.foxlink.tool.Preferences.configFile(instance.context));
         preferences.setPreSharedKey(preShareKey);
+        try {
+            preferences.commit();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public static String inUsePreShareKey(Activity activity) {
-        Preferences preferences = new Preferences(tech.foxio.foxlink.tool.Preferences.configFile(activity));
+    public static String inUsePreShareKey() {
+        Preferences preferences = new Preferences(tech.foxio.foxlink.tool.Preferences.configFile(instance.context));
         String preShareKey = null;
         try {
             preShareKey = preferences.getPreSharedKey();

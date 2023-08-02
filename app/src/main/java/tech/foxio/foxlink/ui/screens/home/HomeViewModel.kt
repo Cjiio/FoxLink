@@ -61,6 +61,8 @@ class HomeViewModel @Inject constructor(
             )
         )
         NetbirdModule.setServiceStateListener(MyServiceStateListener(_uiState, _connectInfo))
+//        NetbirdModule.CheckServer("https://app.pipi.ltd:33073", CheckServerSSOListener())
+//        NetbirdModule.ChangeServer("https://app.pipi.ltd:33073", "FD1282B6-C28B-48B4-8497-A4864ED7A049", ChangeServerErrListener())
         NetbirdModule.startService()
     }
 
@@ -84,7 +86,9 @@ class HomeViewModel @Inject constructor(
         url: String,
         ssoListener: SSOListener = CheckServerSSOListener()
     ) {
-        NetbirdModule.CheckServer(url, ssoListener)
+        launchIO {
+            NetbirdModule.CheckServer(url, ssoListener)
+        }
     }
 
     class CheckServerSSOListener : SSOListener {
@@ -97,12 +101,14 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun changeServer(
+    private fun changeServer(
         url: String,
         key: String,
         errListener: ErrListener = ChangeServerErrListener()
     ) {
-        NetbirdModule.ChangeServer(url, key, errListener)
+        launchIO {
+            NetbirdModule.ChangeServer(url, key, errListener)
+        }
     }
 
     class ChangeServerErrListener : ErrListener {

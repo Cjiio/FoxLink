@@ -31,19 +31,26 @@ import androidx.compose.material.icons.outlined.Build
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -51,6 +58,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -135,7 +144,7 @@ fun HomeScreen(
             }
         },
         drawerContent = {
-            DrawerContent(scaffoldState, scope)
+            DrawerContent(scaffoldState, scope, homeViewModel)
         }
     )
 }
@@ -145,17 +154,23 @@ fun HomeScreen(
 fun DrawerContentPreview() {
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
+    val openSetPreShareKeyDialog = remember { mutableStateOf(false) }
     AppTheme {
         Surface(
             color = MaterialTheme.colorScheme.background,
         ) {
-            DrawerContent(scaffoldState, scope)
+//            DrawerContent(scaffoldState, scope, homeViewModel)
         }
     }
 }
 
 @Composable
-fun DrawerContent(scaffoldState: ScaffoldState, scope: CoroutineScope) {
+fun DrawerContent(
+    scaffoldState: ScaffoldState,
+    scope: CoroutineScope,
+    homeViewModel: HomeViewModel
+) {
+    val openDialog = remember { mutableStateOf(false) }
     BackHandler(enabled = scaffoldState.drawerState.isOpen) {
         scope.launch {
             scaffoldState.drawerState.close()
@@ -192,7 +207,7 @@ fun DrawerContent(scaffoldState: ScaffoldState, scope: CoroutineScope) {
                             .defaultMinSize(minHeight = 50.dp)
                             .fillMaxWidth()
                             .clickable {
-
+                                homeViewModel.sendUIIntent(HomeIntent.CheckServer("https://app.pipi.ltd:33073"))
                             },
                     ) {
                         Icon(
@@ -202,7 +217,7 @@ fun DrawerContent(scaffoldState: ScaffoldState, scope: CoroutineScope) {
                         )
                         Spacer(modifier = Modifier.width(20.dp))
                         Text(
-                            text = "My Account",
+                            text = "Check Server",
                             style = MaterialTheme.typography.titleMedium,
                             color = MaterialTheme.colorScheme.onPrimary
                         )
@@ -215,7 +230,12 @@ fun DrawerContent(scaffoldState: ScaffoldState, scope: CoroutineScope) {
                             .defaultMinSize(minHeight = 50.dp)
                             .fillMaxWidth()
                             .clickable {
-
+                                homeViewModel.sendUIIntent(
+                                    HomeIntent.ChangeServer(
+                                        "https://app.pipi.ltd:33073",
+                                        "FD1282B6-C28B-48B4-8497-A4864ED7A049"
+                                    )
+                                )
                             },
                     ) {
                         Icon(
@@ -225,7 +245,7 @@ fun DrawerContent(scaffoldState: ScaffoldState, scope: CoroutineScope) {
                         )
                         Spacer(modifier = Modifier.width(20.dp))
                         Text(
-                            text = "Share App",
+                            text = "Change Server",
                             style = MaterialTheme.typography.titleMedium,
                             color = MaterialTheme.colorScheme.onPrimary
                         )
@@ -238,8 +258,11 @@ fun DrawerContent(scaffoldState: ScaffoldState, scope: CoroutineScope) {
                             .defaultMinSize(minHeight = 50.dp)
                             .fillMaxWidth()
                             .clickable {
-
-                            },
+                                scope.launch {
+                                    scaffoldState.drawerState.close()
+                                    openDialog.value = true
+                                }
+                            }
                     ) {
                         Icon(
                             imageVector = Icons.Outlined.Build,
@@ -292,6 +315,73 @@ fun DrawerContent(scaffoldState: ScaffoldState, scope: CoroutineScope) {
             )
             Spacer(modifier = Modifier.height(20.dp))
         }
+    }
+    if (openDialog.value) {
+        var preShareKey by remember { mutableStateOf(NetbirdModule.inUsePreShareKey()) }
+        var preShareKeyHidden by remember { mutableStateOf(true) }
+        AlertDialog(
+            containerColor = MaterialTheme.colorScheme.surface,
+            title = {
+                Text(
+                    text = "Set Pre-Share Key",
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
+            },
+            text = {
+                TextField(
+                    trailingIcon = {
+                        IconButton(
+                            onClick = {
+                                preShareKeyHidden = !preShareKeyHidden
+                            }
+                        ) {
+                            Icon(
+                                painterResource(
+                                    id = R.drawable.line_arrow_circle_up_light
+                                ),
+                                null
+                            )
+                        }
+                    },
+                    visualTransformation = if (preShareKeyHidden) PasswordVisualTransformation() else VisualTransformation.None,
+                    colors = TextFieldDefaults.colors(
+                        focusedTextColor = MaterialTheme.colorScheme.onPrimary,
+                        unfocusedTextColor = MaterialTheme.colorScheme.onPrimary,
+                        focusedContainerColor = MaterialTheme.colorScheme.onSurface,
+                        unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent
+                    ),
+                    singleLine = true,
+                    maxLines = 1,
+                    minLines = 1,
+                    value = preShareKey,
+                    onValueChange = {
+                        preShareKey = it
+                    },
+                )
+            },
+            onDismissRequest = { openDialog.value = false },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        NetbirdModule.setPreShareKey(preShareKey)
+                        openDialog.value = false
+                    }
+                ) {
+                    Text(text = "Ok")
+                }
+            },
+            dismissButton = {
+                Button(
+                    onClick = {
+                        openDialog.value = false
+                    }
+                ) {
+                    Text(text = "Cancel")
+                }
+            }
+        )
     }
 }
 

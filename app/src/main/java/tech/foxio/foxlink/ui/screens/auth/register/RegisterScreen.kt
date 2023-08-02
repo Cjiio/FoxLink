@@ -19,7 +19,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.paint
@@ -29,10 +28,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import tech.foxio.foxlink.R
-import tech.foxio.foxlink.ui.screens.connectDetail.ConnectDetailScreen
 import tech.foxio.foxlink.ui.theme.AppTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -71,6 +67,10 @@ private fun RegisterForm() {
     ) {
         TextField(
             colors = TextFieldDefaults.colors(
+                focusedTextColor = MaterialTheme.colorScheme.onPrimary,
+                unfocusedTextColor = MaterialTheme.colorScheme.onPrimary,
+                focusedContainerColor = MaterialTheme.colorScheme.onBackground,
+                unfocusedContainerColor = MaterialTheme.colorScheme.onBackground,
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent
             ),
@@ -79,10 +79,11 @@ private fun RegisterForm() {
             modifier = Modifier
                 .fillMaxWidth()
                 .height(70.dp),
-            label = {
+            placeholder = {
                 Text(
                     text = "Full Name",
-                    style = MaterialTheme.typography.bodySmall
+                    color = MaterialTheme.colorScheme.outline,
+                    style = MaterialTheme.typography.bodySmall,
                 )
             },
             value = "",
@@ -91,6 +92,10 @@ private fun RegisterForm() {
         Spacer(modifier = Modifier.height(20.dp))
         TextField(
             colors = TextFieldDefaults.colors(
+                focusedTextColor = MaterialTheme.colorScheme.onPrimary,
+                unfocusedTextColor = MaterialTheme.colorScheme.onPrimary,
+                focusedContainerColor = MaterialTheme.colorScheme.onBackground,
+                unfocusedContainerColor = MaterialTheme.colorScheme.onBackground,
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent
             ),
@@ -99,10 +104,11 @@ private fun RegisterForm() {
             modifier = Modifier
                 .fillMaxWidth()
                 .height(70.dp),
-            label = {
+            placeholder = {
                 Text(
                     text = "Email Address",
-                    style = MaterialTheme.typography.bodySmall
+                    color = MaterialTheme.colorScheme.outline,
+                    style = MaterialTheme.typography.bodySmall,
                 )
             },
             value = "",
@@ -111,6 +117,10 @@ private fun RegisterForm() {
         Spacer(modifier = Modifier.height(20.dp))
         TextField(
             colors = TextFieldDefaults.colors(
+                focusedTextColor = MaterialTheme.colorScheme.onPrimary,
+                unfocusedTextColor = MaterialTheme.colorScheme.onPrimary,
+                focusedContainerColor = MaterialTheme.colorScheme.onBackground,
+                unfocusedContainerColor = MaterialTheme.colorScheme.onBackground,
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent
             ),
@@ -119,10 +129,11 @@ private fun RegisterForm() {
             modifier = Modifier
                 .fillMaxWidth()
                 .height(70.dp),
-            label = {
+            placeholder = {
                 Text(
                     text = "Password",
-                    style = MaterialTheme.typography.bodySmall
+                    color = MaterialTheme.colorScheme.outline,
+                    style = MaterialTheme.typography.bodySmall,
                 )
             },
             value = "",
