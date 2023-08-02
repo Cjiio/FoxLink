@@ -3,10 +3,12 @@ package tech.foxio.foxlink.ui.screens.home
 import android.app.Activity
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -25,6 +27,9 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material.icons.outlined.AccountCircle
+import androidx.compose.material.icons.outlined.Build
+import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -152,7 +157,6 @@ fun DrawerContentPreview() {
 
 @Composable
 fun DrawerContent(scaffoldState: ScaffoldState, scope: CoroutineScope) {
-
     BackHandler(enabled = scaffoldState.drawerState.isOpen) {
         scope.launch {
             scaffoldState.drawerState.close()
@@ -180,13 +184,17 @@ fun DrawerContent(scaffoldState: ScaffoldState, scope: CoroutineScope) {
             modifier = Modifier
                 .fillMaxWidth(),
             horizontalAlignment = Alignment.Start,
-            verticalArrangement = Arrangement.spacedBy(40.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp),
             content = {
-                items(5) {
+                item {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
-                            .fillMaxWidth(),
+                            .defaultMinSize(minHeight = 50.dp)
+                            .fillMaxWidth()
+                            .clickable {
+
+                            },
                     ) {
                         Icon(
                             imageVector = Icons.Outlined.AccountCircle,
@@ -201,8 +209,90 @@ fun DrawerContent(scaffoldState: ScaffoldState, scope: CoroutineScope) {
                         )
                     }
                 }
+                item {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .defaultMinSize(minHeight = 50.dp)
+                            .fillMaxWidth()
+                            .clickable {
+
+                            },
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.Share,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onPrimary
+                        )
+                        Spacer(modifier = Modifier.width(20.dp))
+                        Text(
+                            text = "Share App",
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.onPrimary
+                        )
+                    }
+                }
+                item {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .defaultMinSize(minHeight = 50.dp)
+                            .fillMaxWidth()
+                            .clickable {
+
+                            },
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.Build,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onPrimary
+                        )
+                        Spacer(modifier = Modifier.width(20.dp))
+                        Text(
+                            text = "Advanced",
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.onPrimary
+                        )
+                    }
+                }
+                item {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .defaultMinSize(minHeight = 50.dp)
+                            .fillMaxWidth()
+                            .clickable {
+
+                            },
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.Settings,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onPrimary
+                        )
+                        Spacer(modifier = Modifier.width(20.dp))
+                        Text(
+                            text = "Setting",
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.onPrimary
+                        )
+                    }
+                }
             }
         )
+        Column(
+            verticalArrangement = Arrangement.Bottom,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
+            Text(
+                text = "©2023 FoxLink",
+                style = MaterialTheme.typography.titleSmall,
+                color = MaterialTheme.colorScheme.outline
+            )
+            Spacer(modifier = Modifier.height(20.dp))
+        }
     }
 }
 

@@ -33,12 +33,12 @@ android {
     }
 
     namespace = "tech.foxio.foxlink"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "tech.foxio.foxlink"
         minSdk = 24
-        targetSdk = 33
+        targetSdk = 34
         versionCode = getVersionCode()
         versionName = getVersionName()
 
@@ -48,8 +48,8 @@ android {
         }
         //ndk配置
         ndk {
-            abiFilters += "arm64-v8a"
-            abiFilters += "armeabi-v7a"
+            //noinspection ChromeOsAbiSupport
+            abiFilters += listOf("armeabi-v7a", "arm64-v8a")
         }
         //BuildConfig配置
         buildConfigField("String", "DATA_BASE_NAME", "\"AppData.db\"")
