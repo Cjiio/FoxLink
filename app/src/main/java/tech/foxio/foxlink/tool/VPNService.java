@@ -1,5 +1,8 @@
 package tech.foxio.foxlink.tool;
 
+import android.ConnectionListener;
+import android.PeerInfoArray;
+import android.URLOpener;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -10,13 +13,10 @@ import android.net.VpnService;
 import android.os.Binder;
 import android.os.IBinder;
 import android.os.Parcel;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
 
-import android.ConnectionListener;
-import android.PeerInfoArray;
-import android.URLOpener;
+import com.safframework.log.L;
 
 
 public class VPNService extends VpnService {
@@ -31,13 +31,13 @@ public class VPNService extends VpnService {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.d(LOGTAG, "onCreate");
+        L.d(LOGTAG, "onCreate");
         engineRunner = new EngineRunner(this);
     }
 
     @Override
     public int onStartCommand(@Nullable final Intent intent, final int flags, final int startId) {
-        Log.d(LOGTAG, "onStartCommand");
+        L.d(LOGTAG, "onStartCommand");
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -50,7 +50,7 @@ public class VPNService extends VpnService {
 
     @Override
     public boolean onUnbind(Intent intent) {
-        Log.d(LOGTAG, "unbind from activity");
+        L.d(LOGTAG, "unbind from activity");
         if (!engineRunner.isRunning()) {
             stopSelf();
         }
@@ -60,13 +60,13 @@ public class VPNService extends VpnService {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d(LOGTAG, "onDestroy");
+        L.d(LOGTAG, "onDestroy");
         engineRunner.stop();
     }
 
     @Override
     public void onRevoke() {
-        Log.d(LOGTAG, "VPN permission on revoke");
+        L.d(LOGTAG, "VPN permission on revoke");
         if (engineRunner != null) {
             engineRunner.stop();
         }
@@ -79,7 +79,7 @@ public class VPNService extends VpnService {
     private boolean hasVpnPermission(Activity context) {
         Intent intentPrepare = VpnService.prepare(context);
         if (intentPrepare != null) {
-            Log.d(LOGTAG, "open vpn permission dialog");
+            L.d(LOGTAG, "open vpn permission dialog");
             context.startActivityForResult(intentPrepare, VPN_REQUEST_CODE);
             return false;
         }

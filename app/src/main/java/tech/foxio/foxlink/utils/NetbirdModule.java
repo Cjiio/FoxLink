@@ -15,7 +15,6 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.net.VpnService;
 import android.os.IBinder;
-import android.util.Log;
 
 import com.safframework.log.L;
 
@@ -34,7 +33,7 @@ public class NetbirdModule {
     public Context context;
 
     public NetbirdModule(Activity activity) {
-        Log.d(LOG_TAG, "init");
+        L.d(LOG_TAG, "init");
         this.context = activity.getApplicationContext();
         urlOpener = new MyURLOpener();
         serviceIPC = new MyServiceConnection();
@@ -42,7 +41,7 @@ public class NetbirdModule {
     }
 
     public static void Destroy() {
-        Log.d(LOG_TAG, "destroy");
+        L.d(LOG_TAG, "destroy");
         if (instance != null) {
             instance.unbindFromServiceOnDestroy();
             instance = null;
@@ -125,12 +124,12 @@ public class NetbirdModule {
     }
 
     private void bindToService() {
-        Log.d(LOG_TAG, "try to bind the service");
+        L.d(LOG_TAG, "try to bind the service");
         context.bindService(new Intent(context, VPNService.class), serviceIPC, Context.BIND_ABOVE_CLIENT);
     }
 
     public void unbindFromServiceOnDestroy() {
-        Log.d(LOG_TAG, "unbindFromServiceOnDestroy");
+        L.d(LOG_TAG, "unbindFromServiceOnDestroy");
         if (mBinder == null) {
             return;
         }
@@ -154,7 +153,7 @@ public class NetbirdModule {
     }
 
     public void unbindFromServiceAfterCancel() {
-        Log.d(LOG_TAG, "unbindFromServiceAfterCancel");
+        L.d(LOG_TAG, "unbindFromServiceAfterCancel");
         if (mBinder == null) {
             return;
         }
@@ -163,7 +162,7 @@ public class NetbirdModule {
     }
 
     private void unBindFromService() {
-        Log.d(LOG_TAG, "unBindFromService");
+        L.d(LOG_TAG, "unBindFromService");
         mBinder.removeConnectionStateListener();
         mBinder.removeServiceStateListener(serviceStateListener);
         context.unbindService(serviceIPC);
@@ -172,14 +171,14 @@ public class NetbirdModule {
     private static class MyURLOpener implements URLOpener {
         @Override
         public void open(String s) {
-            Log.d(LOG_TAG, "open " + s);
+            L.d(LOG_TAG, "open " + s);
         }
     }
 
     private class MyServiceConnection implements ServiceConnection {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            Log.d(LOG_TAG, "on service connected");
+            L.d(LOG_TAG, "on service connected");
             mBinder = (VPNService.MyLocalBinder) service;
             mBinder.setConnectionStateListener(connectionListener);
             mBinder.addServiceStateListener(serviceStateListener);
@@ -187,7 +186,7 @@ public class NetbirdModule {
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            Log.d(LOG_TAG, "onServiceDisconnected");
+            L.d(LOG_TAG, "onServiceDisconnected");
         }
 
         @Override

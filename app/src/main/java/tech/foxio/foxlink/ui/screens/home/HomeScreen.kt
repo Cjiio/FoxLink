@@ -67,7 +67,6 @@ fun HomeScreen(
 ) {
     val dataState by homeViewModel.uiState.collectAsStateWithLifecycle()
     val connectInfo by homeViewModel.connectInfo.collectAsStateWithLifecycle()
-    val timeState by homeViewModel.timeState.collectAsStateWithLifecycle()
     val connectState = dataState.connectState
     val tipsContent: String
     val tipsIcon: ImageVector
@@ -123,9 +122,9 @@ fun HomeScreen(
                     .padding(horizontal = 25.dp)
                     .padding(it)
             ) {
-                ConnectionTime(timeState.formattedTime)
+                ConnectionTime(connectInfo.connectTime)
                 ConnectionInfo(connectInfo)
-                UpDownSpeed()
+                UpDownSpeed(connectInfo)
                 ConnectButton(
                     homeViewModel,
                     connectButtonBgColor,
@@ -390,39 +389,6 @@ fun TipsViewPreview() {
 }
 
 @Composable
-fun SpeedView(
-    icon: Int, text: String, speed: String
-) {
-    Row(
-        modifier = Modifier.padding(horizontal = 8.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center
-    ) {
-        Icon(
-            painter = painterResource(id = icon),
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.onPrimary,
-        )
-        Spacer(modifier = Modifier.width(8.dp))
-        Column(
-            verticalArrangement = Arrangement.Center,
-        ) {
-            Text(
-                text = text,
-                color = MaterialTheme.colorScheme.outline,
-                style = MaterialTheme.typography.bodySmall
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = "$speed kB/s",
-                color = MaterialTheme.colorScheme.outline,
-                style = MaterialTheme.typography.bodyMedium
-            )
-        }
-    }
-}
-
-@Composable
 private fun ConnectionInfo(connectInfo: ConnectInfo) {
     Surface(
         color = MaterialTheme.colorScheme.surface,
@@ -487,7 +453,7 @@ fun ConnectionInfoPreview() {
 }
 
 @Composable
-fun UpDownSpeed() {
+fun UpDownSpeed(connectInfo: ConnectInfo) {
     Row(
         modifier = Modifier
             .padding(vertical = 15.dp, horizontal = 30.dp)
@@ -495,13 +461,90 @@ fun UpDownSpeed() {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        SpeedView(R.drawable.line_arrow_circle_down_light, "Download", "245")
-        Divider(
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
+                .weight(1f)
+                .padding(vertical = 16.dp)
+        ) {
+            Row(
+                modifier = Modifier
+                    .padding(horizontal = 8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.line_arrow_circle_down_light),
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onPrimary,
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Column(
+                    verticalArrangement = Arrangement.Center,
+                ) {
+                    Text(
+                        text = "Download",
+                        color = MaterialTheme.colorScheme.outline,
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        modifier = Modifier
+                            .defaultMinSize(minWidth = 60.dp),
+                        text = connectInfo.downloadSpeeds,
+                        color = MaterialTheme.colorScheme.outline,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+            }
+        }
+        Divider(
+            color = Color.Gray,
+            thickness = 1.dp,
+            modifier = Modifier
+                .padding(vertical = 16.dp)
                 .height(40.dp)
-                .width(1.dp),
+                .width(1.dp)
         )
-        SpeedView(R.drawable.line_arrow_circle_up_light, "Upload", "176")
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .padding(vertical = 16.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Row(
+                modifier = Modifier
+                    .padding(horizontal = 8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.line_arrow_circle_up_light),
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onPrimary,
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Column(
+                    verticalArrangement = Arrangement.Center,
+                ) {
+                    Text(
+                        text = "Upload",
+                        color = MaterialTheme.colorScheme.outline,
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        modifier = Modifier
+                            .defaultMinSize(minWidth = 60.dp),
+                        text = connectInfo.uploadSpeeds,
+                        color = MaterialTheme.colorScheme.outline,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+            }
+        }
     }
 }
 
@@ -512,7 +555,13 @@ fun UpDownSpeedPreview() {
         Surface(
             color = MaterialTheme.colorScheme.background,
         ) {
-            UpDownSpeed()
+            val connectInfo = ConnectInfo(
+                deviceName = "iPhone",
+                ip = "",
+                downloadSpeeds = "0.00 Kd/s",
+                uploadSpeeds = "0.00"
+            )
+            UpDownSpeed(connectInfo)
         }
     }
 }

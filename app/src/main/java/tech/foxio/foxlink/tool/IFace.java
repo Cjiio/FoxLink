@@ -1,6 +1,7 @@
 package tech.foxio.foxlink.tool;
 
 
+import android.TunAdapter;
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.net.VpnService;
@@ -9,9 +10,9 @@ import android.os.ParcelFileDescriptor;
 import android.system.OsConstants;
 import android.util.Log;
 
-import java.util.LinkedList;
+import com.safframework.log.L;
 
-import android.TunAdapter;
+import java.util.LinkedList;
 
 import tech.foxio.foxlink.tool.wg.BackendException;
 import tech.foxio.foxlink.tool.wg.InetNetwork;
@@ -47,12 +48,12 @@ class IFace implements TunAdapter {
         builder.setMtu(mtu);
         if(dns != null && !dns.isEmpty()) {
             builder.addDnsServer(dns);
-            Log.d(LOGTAG, "add DNS server: "+dns);
+            L.d(LOGTAG, "add DNS server: " + dns);
         }
 
         for (Route r : routes) {
             builder.addRoute(r.addr, r.prefixLength);
-            Log.d(LOGTAG, "add route: "+r.addr+"/"+r.prefixLength);
+            L.d(LOGTAG, "add route: " + r.addr + "/" + r.prefixLength);
         }
 
         disallowApp(builder,  "com.google.android.projection.gearhead");

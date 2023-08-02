@@ -1,15 +1,16 @@
 package tech.foxio.foxlink.tool;
 
-import android.util.Log;
-
-import java.util.HashSet;
-import java.util.Set;
-
 import android.Android;
 import android.Client;
 import android.ConnectionListener;
 import android.PeerInfoArray;
 import android.URLOpener;
+import android.util.Log;
+
+import com.safframework.log.L;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import tech.foxio.foxlink.BuildConfig;
 
@@ -37,7 +38,7 @@ class EngineRunner {
     }
 
     public synchronized void run(URLOpener urlOpener) {
-        Log.d(LOGTAG, "run engine");
+        L.d(LOGTAG, "run engine");
         if (engineIsRunning) {
             return;
         }
