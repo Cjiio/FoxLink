@@ -3,6 +3,7 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Locale
 import java.util.Properties
 
 @Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
@@ -12,7 +13,6 @@ plugins {
     id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
 }
-
 
 android {
     //读取本地配置文件
@@ -93,11 +93,45 @@ android {
         val buildType = this.buildType.name
         outputs.all {
             if (this is ApkVariantOutputImpl) {
-                if (buildType == "debug") {
-                    this.outputFileName = "FoxLink-${versionName}-${versionCode}-$buildType.apk"
-                } else if (buildType == "release") {
-                    this.outputFileName = "FoxLink-${versionName}-${versionCode}-$buildType.apk"
+                this.outputFileName =
+                    "${rootProject.name}-${versionName}-${versionCode}-${flavorName}-$buildType.apk"
+            }
+        }
+    }
+    flavorDimensions += "channel"
+    //多渠道打包
+    productFlavors {
+        //默认
+        create("Default") {
+            dimension = "channel"
+            buildConfigField("String", "APP_CHANNEL", "\"Default\"")
+        }
+        //GooglePlay
+        create("GooglePlay") {
+            dimension = "channel"
+            buildConfigField("String", "APP_CHANNEL", "\"GooglePlay\"")
+        }
+        //酷安
+        create("CoolApk") {
+            dimension = "channel"
+            buildConfigField("String", "APP_CHANNEL", "\"CoolApk\"")
+        }
+    }
+
+    tasks.register("assembleAllChannelsRelease") {
+        group = "MyBuild"
+        description = "Assembles all release APKs for each channel"
+        // 遍历所有渠道的Release构建类型
+        val releaseVariants = android.applicationVariants.filter { it.buildType.name == "release" }
+        releaseVariants.forEach { variant ->
+            variant.productFlavors.forEach { flavor ->
+                val formattedFlavor = flavor.name.replaceFirstChar {
+                    if (it.isLowerCase()) it.titlecase(
+                        Locale.getDefault()
+                    ) else it.toString()
                 }
+                val taskName = "assemble${formattedFlavor}Release"
+                dependsOn(tasks.getByName(taskName))
             }
         }
     }
