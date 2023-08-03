@@ -1,6 +1,5 @@
 package tech.foxio.foxlink.ui.screens.auth.register
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -51,7 +50,6 @@ fun RegisterScreen(
             .padding(top = 50.dp),
     ) {
         HeadContent()
-        PortraitContent()
         RegisterForm()
     }
 }
@@ -161,27 +159,6 @@ private fun RegisterForm() {
             text = "Have an Account? Sign In",
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.primary,
-        )
-    }
-}
-
-@Composable
-private fun PortraitContent() {
-    Column(
-        modifier = Modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        Image(
-            painter = painterResource(id = R.drawable.app_logo),
-            contentDescription = null,
-            modifier = Modifier
-                .size(100.dp)
-        )
-        Text(
-            text = "Tap to select new avatar",
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSecondary,
         )
     }
 }

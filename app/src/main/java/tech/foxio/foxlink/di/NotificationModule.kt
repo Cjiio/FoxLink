@@ -37,7 +37,7 @@ object NotificationModule {
     @Singleton
     fun provideNotificationBuilder(@ApplicationContext context: Context): NotificationCompat.Builder {
         return NotificationCompat.Builder(context, BuildConfig.NOTIFICATION_CHANNEL_ID)
-            .setSmallIcon(R.drawable.app_logo)
+            .setSmallIcon(R.drawable.app_icon)
             .setOngoing(true)
             .setVisibility(NotificationCompat.VISIBILITY_SECRET)
             .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))

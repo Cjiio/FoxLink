@@ -34,7 +34,7 @@ fun SplashScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Full_Logo(200.dp)
+        Full_Logo(150.dp)
     }
 }
 

@@ -3,7 +3,6 @@ package tech.foxio.foxlink.ui.components
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -26,7 +25,7 @@ fun Full_Logo(size : Dp) {
         verticalArrangement = Arrangement.Center
     ) {
         Image(
-            painter = painterResource(id = R.drawable.app_logo),
+            painter = painterResource(id = R.drawable.app_icon),
             contentDescription = null,
             modifier = Modifier.size(size)
         )
@@ -42,5 +41,5 @@ fun Full_Logo(size : Dp) {
 @Preview
 @Composable
 fun Full_LogoPreview() {
-    Full_Logo(200.dp)
+    Full_Logo(150.dp)
 }

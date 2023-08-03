@@ -9,9 +9,9 @@ import java.util.Properties
 @Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
 plugins {
     alias(libs.plugins.androidApplication)
+    id("com.google.dagger.hilt.android")
     alias(libs.plugins.kotlinAndroid)
     id("kotlin-kapt")
-    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -49,7 +49,7 @@ android {
         //ndk配置
         ndk {
             //noinspection ChromeOsAbiSupport
-            abiFilters += listOf("armeabi-v7a", "arm64-v8a", "x86_64")
+            abiFilters += listOf("armeabi-v7a", "arm64-v8a")
         }
         //BuildConfig配置
         buildConfigField("String", "DATA_BASE_NAME", "\"AppData.db\"")

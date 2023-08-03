@@ -53,8 +53,10 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -122,8 +124,16 @@ fun HomeScreen(
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
     Scaffold(
+        modifier = Modifier
+            .paint(
+                painter = painterResource(id = R.drawable.backgroud),
+                sizeToIntrinsics = true,
+                alignment = Alignment.Center,
+                alpha = 0.5f,
+                contentScale = ContentScale.Crop
+            ),
         scaffoldState = scaffoldState,
-        backgroundColor = MaterialTheme.colorScheme.background,
+        backgroundColor = Color.Transparent,
         drawerBackgroundColor = MaterialTheme.colorScheme.background.copy(alpha = 0.95f),
         topBar = { HeadContent(scaffoldState, scope) },
         content = {
@@ -704,7 +714,7 @@ private fun HeadContent(
 ) {
     CenterAlignedTopAppBar(
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-            containerColor = MaterialTheme.colorScheme.background
+            containerColor = Color.Transparent
         ),
         modifier = Modifier
             .padding(horizontal = 25.dp),
