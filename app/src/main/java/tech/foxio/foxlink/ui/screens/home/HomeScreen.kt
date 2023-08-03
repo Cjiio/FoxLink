@@ -64,11 +64,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.hjq.permissions.Permission
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import tech.foxio.foxlink.R
 import tech.foxio.foxlink.ui.theme.AppTheme
 import tech.foxio.foxlink.utils.NetbirdModule
+import tech.foxio.foxlink.utils.PermissionsUtils
 
 @Composable
 fun HomeScreen(
@@ -407,10 +409,14 @@ fun ConnectButton(
         ) {
             Surface(
                 onClick = {
-//                    netbirdModule.switchConnect(true)
-                    if (NetbirdModule.hasVpnPermission(context)) {
-                        homeViewModel.sendUIIntent(HomeIntent.SwitchConnect)
-                    }
+                    PermissionsUtils.checkPermissions(
+                        context,
+                        homeViewModel.sendUIIntent(HomeIntent.SwitchConnect),
+                        //通知权限
+                        Permission.POST_NOTIFICATIONS,
+                        //VPN权限
+                        Permission.BIND_VPN_SERVICE
+                    )
                 },
                 shape = RoundedCornerShape(30.dp),
                 modifier = Modifier.padding(30.dp),

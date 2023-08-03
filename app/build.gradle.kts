@@ -55,7 +55,7 @@ android {
         buildConfigField("String", "DATA_BASE_NAME", "\"AppData.db\"")
         buildConfigField("String", "DATA_STORE_NAME", "\"AppDataStore\"")
         buildConfigField("String", "NOTIFICATION_CHANNEL_ID", "\"FoxLinkChannelID\"")
-        buildConfigField("String", "NOTIFICATION_CHANNEL_NAME", "\"FoxLinkChannel\"")
+        buildConfigField("String", "NOTIFICATION_CHANNEL_NAME", "\"FoxLinkConnectState\"")
         buildConfigField("String", "APP_WRITE_PROJECT_ID", "\"64be39e09e155ffc6946\"")
         buildConfigField("String", "APP_WRITE_BASE_URL", "\"https://app.foxio.tech/\"")
     }
@@ -258,6 +258,10 @@ dependencies {
     //==================== Image Loading ============================
     //noinspection UseTomlInstead
     implementation("io.coil-kt:coil-compose:2.4.0")
+
+    //==================== Permissions ============================
+    //noinspection UseTomlInstead
+    implementation("com.github.getActivity:XXPermissions:18.2")
 
     implementation(libs.core.ktx)
     implementation(libs.lifecycle.runtime.ktx)
