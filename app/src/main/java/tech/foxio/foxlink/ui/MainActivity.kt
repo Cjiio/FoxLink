@@ -6,7 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import dagger.hilt.android.AndroidEntryPoint
-import tech.foxio.foxlink.ui.screens.splash.SplashScreen
+import tech.foxio.foxlink.ui.screens.home.HomeScreen
 import tech.foxio.foxlink.ui.theme.AppTheme
 import tech.foxio.foxlink.utils.NetbirdModule
 
@@ -20,7 +20,7 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     color = MaterialTheme.colorScheme.background,
                 ) {
-                    SplashScreen()
+                    HomeScreen()
                 }
             }
         }

@@ -49,13 +49,15 @@ android {
         //ndk配置
         ndk {
             //noinspection ChromeOsAbiSupport
-            abiFilters += listOf("armeabi-v7a", "arm64-v8a")
+            abiFilters += listOf("armeabi-v7a", "arm64-v8a", "x86_64")
         }
         //BuildConfig配置
         buildConfigField("String", "DATA_BASE_NAME", "\"AppData.db\"")
         buildConfigField("String", "DATA_STORE_NAME", "\"AppDataStore\"")
-        buildConfigField("String", "APP_WRITE_BASE_URL", "\"https://app.foxio.tech/\"")
+        buildConfigField("String", "NOTIFICATION_CHANNEL_ID", "\"FoxLinkChannelID\"")
+        buildConfigField("String", "NOTIFICATION_CHANNEL_NAME", "\"FoxLinkChannel\"")
         buildConfigField("String", "APP_WRITE_PROJECT_ID", "\"64be39e09e155ffc6946\"")
+        buildConfigField("String", "APP_WRITE_BASE_URL", "\"https://app.foxio.tech/\"")
     }
 
     buildTypes {

@@ -3,6 +3,9 @@ package tech.foxio.foxlink.ui.screens.home
 import android.ConnectionListener
 import android.ErrListener
 import android.SSOListener
+import android.annotation.SuppressLint
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.ViewModel
@@ -24,7 +27,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val dataStore: DataStore<Preferences>
+    private val dataStore: DataStore<Preferences>,
+    notificationManager: NotificationManagerCompat,
+    notificationCompatBuilder: NotificationCompat.Builder
 ) : ViewModel() {
 
     private var isConnected: Boolean = false
@@ -57,7 +62,9 @@ class HomeViewModel @Inject constructor(
         NetbirdModule.setConnectionListener(
             MyConnectionListener(
                 _connectInfo,
-                _uiState
+                _uiState,
+                notificationManager,
+                notificationCompatBuilder
             )
         )
         NetbirdModule.setServiceStateListener(MyServiceStateListener(_uiState, _connectInfo))
@@ -151,17 +158,21 @@ class HomeViewModel @Inject constructor(
     }
 
     class MyConnectionListener(
-        _connectInfo: MutableStateFlow<ConnectInfo>,
-        _uiState: MutableStateFlow<UIState>
+        private val connectInfo: MutableStateFlow<ConnectInfo>,
+        private val uiState: MutableStateFlow<UIState>,
+        private val notificationManager: NotificationManagerCompat,
+        private val notificationCompatBuilder: NotificationCompat.Builder
     ) : ConnectionListener {
-        private val speed = GetUpAndDownloadSpeed()
         private val LOG_TAG = "HomeViewModel"
-        private val connectInfo = _connectInfo
-        private val uiState = _uiState
+
+        private val speed = GetUpAndDownloadSpeed()
 
         private var startTime: Long = 0L
         private var elapsedTime: Long = 0L
         private var isRunning: Boolean = false
+
+        private val builder = notificationCompatBuilder
+
 
         private fun toggleTimer() {
             if (isRunning) {
@@ -219,33 +230,58 @@ class HomeViewModel @Inject constructor(
             }
         }
 
+        @SuppressLint("MissingPermission")
         override fun onConnected() {
-            uiState.update {
-                it.copy(connectState = ConnectState.CONNECTED)
-            }
-            if (!isRunning) {
-                toggleTimer()
+            CoroutineScope(Dispatchers.IO).launch {
+                builder.setContentTitle("ConnectState")
+                builder.setContentText("Connected")
+                notificationManager.notify(1, builder.build())
+                uiState.update {
+                    it.copy(connectState = ConnectState.CONNECTED)
+                }
+                if (!isRunning) {
+                    toggleTimer()
+                }
             }
         }
 
+        @SuppressLint("MissingPermission")
         override fun onDisconnected() {
-            uiState.update {
-                it.copy(connectState = ConnectState.DISCONNECTED)
-            }
-            if (isRunning) {
-                toggleTimer()
+            CoroutineScope(Dispatchers.IO).launch {
+                builder.setContentTitle("ConnectState")
+                builder.setContentText("Disconnected")
+                notificationManager.notify(1, builder.build())
+                notificationManager.cancel(1)
+                uiState.update {
+                    it.copy(connectState = ConnectState.DISCONNECTED)
+                }
+                if (isRunning) {
+                    toggleTimer()
+                }
             }
         }
 
+        @SuppressLint("MissingPermission")
         override fun onConnecting() {
-            uiState.update {
-                it.copy(connectState = ConnectState.CONNECTING)
+            CoroutineScope(Dispatchers.IO).launch {
+                builder.setContentTitle("ConnectState")
+                builder.setContentText("Connecting")
+                notificationManager.notify(1, builder.build())
+                uiState.update {
+                    it.copy(connectState = ConnectState.CONNECTING)
+                }
             }
         }
 
+        @SuppressLint("MissingPermission")
         override fun onDisconnecting() {
-            uiState.update {
-                it.copy(connectState = ConnectState.DISCONNECTING)
+            CoroutineScope(Dispatchers.IO).launch {
+                builder.setContentTitle("ConnectState")
+                builder.setContentText("Disconnecting")
+                notificationManager.notify(1, builder.build())
+                uiState.update {
+                    it.copy(connectState = ConnectState.DISCONNECTING)
+                }
             }
         }
 
