@@ -21,7 +21,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import tech.foxio.foxlink.tool.ServiceStateListener
-import tech.foxio.foxlink.utils.GetUpAndDownloadSpeed
+import tech.foxio.foxlink.utils.NetSpeedUtils
 import tech.foxio.foxlink.utils.NetbirdModuleUtils
 import javax.inject.Inject
 
@@ -165,7 +165,7 @@ class HomeViewModel @Inject constructor(
     ) : ConnectionListener {
         private val LOG_TAG = "HomeViewModel"
 
-        private val speed = GetUpAndDownloadSpeed()
+        private val speed = NetSpeedUtils()
 
         private var startTime: Long = 0L
         private var elapsedTime: Long = 0L

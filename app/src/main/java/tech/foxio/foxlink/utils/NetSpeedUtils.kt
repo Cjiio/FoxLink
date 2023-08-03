@@ -3,7 +3,7 @@ package tech.foxio.foxlink.utils
 import android.net.TrafficStats
 import java.math.BigDecimal
 
-class GetUpAndDownloadSpeed {
+class NetSpeedUtils {
     private var mCurrentTotalUp: Long = 0       //当前手机总的上行流量
     private var mCurrentTotalDown: Long = 0     //当前手机总的下行流量
     private var mLastTotalUp: Long = 0          //上次手机总的上行流量
