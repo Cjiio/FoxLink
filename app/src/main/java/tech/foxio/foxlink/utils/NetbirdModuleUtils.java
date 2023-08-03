@@ -22,17 +22,17 @@ import tech.foxio.foxlink.tool.DeviceName;
 import tech.foxio.foxlink.tool.ServiceStateListener;
 import tech.foxio.foxlink.tool.VPNService;
 
-public class NetbirdModule {
+public class NetbirdModuleUtils {
     public static final String LOG_TAG = "netbirdlib";
     public static ServiceConnection serviceIPC;
     public static VPNService.MyLocalBinder mBinder;
     public static ServiceStateListener serviceStateListener;
     public static ConnectionListener connectionListener;
     public static URLOpener urlOpener;
-    public static NetbirdModule instance;
+    public static NetbirdModuleUtils instance;
     public Context context;
 
-    public NetbirdModule(Activity activity) {
+    public NetbirdModuleUtils(Activity activity) {
         L.d(LOG_TAG, "init");
         this.context = activity.getApplicationContext();
         urlOpener = new MyURLOpener();
@@ -50,16 +50,16 @@ public class NetbirdModule {
 
     public static synchronized void Init(Activity activity) {
         if (instance == null) {
-            instance = new NetbirdModule(activity);
+            instance = new NetbirdModuleUtils(activity);
         }
     }
 
     public static void setServiceStateListener(ServiceStateListener serviceStateListener) {
-        NetbirdModule.serviceStateListener = serviceStateListener;
+        NetbirdModuleUtils.serviceStateListener = serviceStateListener;
     }
 
     public static void setConnectionListener(ConnectionListener connectionListener) {
-        NetbirdModule.connectionListener = connectionListener;
+        NetbirdModuleUtils.connectionListener = connectionListener;
     }
 
     public static void setPreShareKey(String preShareKey) {

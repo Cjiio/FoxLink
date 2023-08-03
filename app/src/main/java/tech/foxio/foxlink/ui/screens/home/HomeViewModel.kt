@@ -22,7 +22,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import tech.foxio.foxlink.tool.ServiceStateListener
 import tech.foxio.foxlink.utils.GetUpAndDownloadSpeed
-import tech.foxio.foxlink.utils.NetbirdModule
+import tech.foxio.foxlink.utils.NetbirdModuleUtils
 import javax.inject.Inject
 
 @HiltViewModel
@@ -59,7 +59,7 @@ class HomeViewModel @Inject constructor(
     }
 
     init {
-        NetbirdModule.setConnectionListener(
+        NetbirdModuleUtils.setConnectionListener(
             MyConnectionListener(
                 _connectInfo,
                 _uiState,
@@ -67,10 +67,10 @@ class HomeViewModel @Inject constructor(
                 notificationCompatBuilder
             )
         )
-        NetbirdModule.setServiceStateListener(MyServiceStateListener(_uiState, _connectInfo))
+        NetbirdModuleUtils.setServiceStateListener(MyServiceStateListener(_uiState, _connectInfo))
 //        NetbirdModule.CheckServer("https://app.pipi.ltd:33073", CheckServerSSOListener())
 //        NetbirdModule.ChangeServer("https://app.pipi.ltd:33073", "FD1282B6-C28B-48B4-8497-A4864ED7A049", ChangeServerErrListener())
-        NetbirdModule.startService()
+        NetbirdModuleUtils.startService()
     }
 
     fun sendUIIntent(homeIntent: HomeIntent) {
@@ -94,7 +94,7 @@ class HomeViewModel @Inject constructor(
         ssoListener: SSOListener = CheckServerSSOListener()
     ) {
         launchIO {
-            NetbirdModule.CheckServer(url, ssoListener)
+            NetbirdModuleUtils.CheckServer(url, ssoListener)
         }
     }
 
@@ -114,7 +114,7 @@ class HomeViewModel @Inject constructor(
         errListener: ErrListener = ChangeServerErrListener()
     ) {
         launchIO {
-            NetbirdModule.ChangeServer(url, key, errListener)
+            NetbirdModuleUtils.ChangeServer(url, key, errListener)
         }
     }
 
@@ -140,14 +140,14 @@ class HomeViewModel @Inject constructor(
                 _uiState.update {
                     it.copy(connectState = ConnectState.DISCONNECTING)
                 }
-                NetbirdModule.switchConnect(false)
+                NetbirdModuleUtils.switchConnect(false)
             }
 
             false -> {
                 _uiState.update {
                     it.copy(connectState = ConnectState.CONNECTING)
                 }
-                NetbirdModule.switchConnect(true)
+                NetbirdModuleUtils.switchConnect(true)
             }
         }
         isConnected = !isConnected

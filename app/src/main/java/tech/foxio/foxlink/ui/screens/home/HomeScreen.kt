@@ -69,7 +69,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import tech.foxio.foxlink.R
 import tech.foxio.foxlink.ui.theme.AppTheme
-import tech.foxio.foxlink.utils.NetbirdModule
+import tech.foxio.foxlink.utils.NetbirdModuleUtils
 import tech.foxio.foxlink.utils.PermissionsUtils
 
 @Composable
@@ -319,7 +319,7 @@ fun DrawerContent(
         }
     }
     if (openDialog.value) {
-        var preShareKey by remember { mutableStateOf(NetbirdModule.inUsePreShareKey()) }
+        var preShareKey by remember { mutableStateOf(NetbirdModuleUtils.inUsePreShareKey()) }
         var preShareKeyHidden by remember { mutableStateOf(true) }
         AlertDialog(
             containerColor = MaterialTheme.colorScheme.surface,
@@ -367,7 +367,7 @@ fun DrawerContent(
             confirmButton = {
                 Button(
                     onClick = {
-                        NetbirdModule.setPreShareKey(preShareKey)
+                        NetbirdModuleUtils.setPreShareKey(preShareKey)
                         openDialog.value = false
                     }
                 ) {
