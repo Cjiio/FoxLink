@@ -41,8 +41,7 @@ class HomeViewModel @Inject constructor(
     val connectInfo: StateFlow<ConnectInfo> = _connectInfo.asStateFlow()
 
     class MyServiceStateListener(
-        uiState: MutableStateFlow<UIState>,
-        connectState: MutableStateFlow<ConnectInfo>
+        uiState: MutableStateFlow<UIState>, connectState: MutableStateFlow<ConnectInfo>
     ) : ServiceStateListener {
         val _uiState = uiState
         val _connectState = connectState
@@ -61,10 +60,7 @@ class HomeViewModel @Inject constructor(
     init {
         NetbirdModuleUtils.setConnectionListener(
             MyConnectionListener(
-                _connectInfo,
-                _uiState,
-                notificationManager,
-                notificationCompatBuilder
+                _connectInfo, _uiState, notificationManager, notificationCompatBuilder
             )
         )
         NetbirdModuleUtils.setServiceStateListener(MyServiceStateListener(_uiState, _connectInfo))
@@ -90,8 +86,7 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun checkServer(
-        url: String,
-        ssoListener: SSOListener = CheckServerSSOListener()
+        url: String, ssoListener: SSOListener = CheckServerSSOListener()
     ) {
         launchIO {
             NetbirdModuleUtils.CheckServer(url, ssoListener)
@@ -109,9 +104,7 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun changeServer(
-        url: String,
-        key: String,
-        errListener: ErrListener = ChangeServerErrListener()
+        url: String, key: String, errListener: ErrListener = ChangeServerErrListener()
     ) {
         launchIO {
             NetbirdModuleUtils.ChangeServer(url, key, errListener)
@@ -130,9 +123,7 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun switchConnect() {
-        if (_uiState.value.connectState == ConnectState.CONNECTING ||
-            _uiState.value.connectState == ConnectState.DISCONNECTING
-        ) {
+        if (_uiState.value.connectState == ConnectState.CONNECTING || _uiState.value.connectState == ConnectState.DISCONNECTING) {
             return
         }
         when (isConnected) {
@@ -161,7 +152,7 @@ class HomeViewModel @Inject constructor(
         private val connectInfo: MutableStateFlow<ConnectInfo>,
         private val uiState: MutableStateFlow<UIState>,
         private val notificationManager: NotificationManagerCompat,
-        private val notificationCompatBuilder: NotificationCompat.Builder
+        notificationCompatBuilder: NotificationCompat.Builder
     ) : ConnectionListener {
         private val LOG_TAG = "HomeViewModel"
 
@@ -180,9 +171,7 @@ class HomeViewModel @Inject constructor(
                 isRunning = false
                 connectInfo.update {
                     it.copy(
-                        downloadSpeeds = "0 KB/s",
-                        uploadSpeeds = "0 KB/s",
-                        connectTime = "00:00:00"
+                        downloadSpeeds = "0 KB/s", uploadSpeeds = "0 KB/s", connectTime = "00:00:00"
                     )
                 }
             } else {
@@ -208,10 +197,7 @@ class HomeViewModel @Inject constructor(
                     downloadSpeeds = convertSpeed(speed.getTotalDownloadSpeed()),
                     uploadSpeeds = convertSpeed(speed.getTotalUploadSpeed()),
                     connectTime = String.format(
-                        "%02d:%02d:%02d",
-                        hours,
-                        minutes % 60,
-                        seconds % 60
+                        "%02d:%02d:%02d", hours, minutes % 60, seconds % 60
                     )
                 )
             }

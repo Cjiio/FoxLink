@@ -1,6 +1,7 @@
 package tech.foxio.foxlink.ui.screens.home
 
 import android.app.Activity
+import android.content.Context
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -46,6 +47,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -123,6 +125,7 @@ fun HomeScreen(
 
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current as Activity
     Scaffold(
         modifier = Modifier
             .paint(
@@ -147,10 +150,11 @@ fun HomeScreen(
                 ConnectionInfo(connectInfo)
                 UpDownSpeed(connectInfo)
                 ConnectButton(
-                    homeViewModel,
                     connectButtonBgColor,
                     connectButtonColor,
-                    connectButtonIcon
+                    connectButtonIcon,
+                    homeViewModel,
+                    context
                 )
                 TipsView(tipsContent, tipsIcon)
             }
@@ -164,14 +168,13 @@ fun HomeScreen(
 @Preview
 @Composable
 fun DrawerContentPreview() {
-    val scaffoldState = rememberScaffoldState()
-    val scope = rememberCoroutineScope()
-    val openSetPreShareKeyDialog = remember { mutableStateOf(false) }
     AppTheme {
         Surface(
             color = MaterialTheme.colorScheme.background,
         ) {
-//            DrawerContent(scaffoldState, scope, homeViewModel)
+            val scaffoldState = rememberScaffoldState()
+            val scope = rememberCoroutineScope()
+            DrawerContent(scaffoldState, scope, null)
         }
     }
 }
@@ -180,7 +183,8 @@ fun DrawerContentPreview() {
 fun DrawerContent(
     scaffoldState: ScaffoldState,
     scope: CoroutineScope,
-    homeViewModel: HomeViewModel
+    //TODO
+    homeViewModel: HomeViewModel?
 ) {
     val openDialog = remember { mutableStateOf(false) }
     BackHandler(enabled = scaffoldState.drawerState.isOpen) {
@@ -219,7 +223,8 @@ fun DrawerContent(
                             .defaultMinSize(minHeight = 50.dp)
                             .fillMaxWidth()
                             .clickable {
-                                homeViewModel.sendUIIntent(HomeIntent.CheckServer("https://app.pipi.ltd:33073"))
+                                //TODO
+                                homeViewModel?.sendUIIntent(HomeIntent.CheckServer("https://app.pipi.ltd:33073"))
                             },
                     ) {
                         Icon(
@@ -242,7 +247,8 @@ fun DrawerContent(
                             .defaultMinSize(minHeight = 50.dp)
                             .fillMaxWidth()
                             .clickable {
-                                homeViewModel.sendUIIntent(
+                                //TODO
+                                homeViewModel?.sendUIIntent(
                                     HomeIntent.ChangeServer(
                                         "https://app.pipi.ltd:33073",
                                         "FD1282B6-C28B-48B4-8497-A4864ED7A049"
@@ -329,88 +335,97 @@ fun DrawerContent(
         }
     }
     if (openDialog.value) {
-        var preShareKey by remember { mutableStateOf(NetbirdModuleUtils.inUsePreShareKey()) }
-        var preShareKeyHidden by remember { mutableStateOf(true) }
-        AlertDialog(
-            containerColor = MaterialTheme.colorScheme.surface,
-            title = {
-                Text(
-                    text = "Set Pre-Share Key",
-                    color = MaterialTheme.colorScheme.onPrimary
-                )
-            },
-            text = {
-                TextField(
-                    trailingIcon = {
-                        IconButton(
-                            onClick = {
-                                preShareKeyHidden = !preShareKeyHidden
-                            }
-                        ) {
-                            Icon(
-                                painterResource(
-                                    id = R.drawable.line_arrow_circle_up_light
-                                ),
-                                null
-                            )
-                        }
-                    },
-                    visualTransformation = if (preShareKeyHidden) PasswordVisualTransformation() else VisualTransformation.None,
-                    colors = TextFieldDefaults.colors(
-                        focusedTextColor = MaterialTheme.colorScheme.onPrimary,
-                        unfocusedTextColor = MaterialTheme.colorScheme.onPrimary,
-                        focusedContainerColor = MaterialTheme.colorScheme.onSurface,
-                        unfocusedContainerColor = MaterialTheme.colorScheme.surface,
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent
-                    ),
-                    singleLine = true,
-                    maxLines = 1,
-                    minLines = 1,
-                    value = preShareKey,
-                    onValueChange = {
-                        preShareKey = it
-                    },
-                )
-            },
-            onDismissRequest = { openDialog.value = false },
-            confirmButton = {
-                Button(
-                    onClick = {
-                        NetbirdModuleUtils.setPreShareKey(preShareKey)
-                        openDialog.value = false
-                    }
-                ) {
-                    Text(text = "Ok")
-                }
-            },
-            dismissButton = {
-                Button(
-                    onClick = {
-                        openDialog.value = false
-                    }
-                ) {
-                    Text(text = "Cancel")
-                }
-            }
-        )
+        SetPreKeyAlertDialog(openDialog)
     }
 }
 
 @Composable
+private fun SetPreKeyAlertDialog(
+    openDialog: MutableState<Boolean>
+) {
+    var preShareKey by remember { mutableStateOf(NetbirdModuleUtils.inUsePreShareKey()) }
+    var preShareKeyHidden by remember { mutableStateOf(true) }
+    AlertDialog(
+        containerColor = MaterialTheme.colorScheme.surface,
+        title = {
+            Text(
+                text = "Set Pre-Share Key",
+                color = MaterialTheme.colorScheme.onPrimary
+            )
+        },
+        text = {
+            TextField(
+                trailingIcon = {
+                    IconButton(
+                        onClick = {
+                            preShareKeyHidden = !preShareKeyHidden
+                        }
+                    ) {
+                        Icon(
+                            painterResource(
+                                id = R.drawable.line_arrow_circle_up_light
+                            ),
+                            null
+                        )
+                    }
+                },
+                visualTransformation = if (preShareKeyHidden) PasswordVisualTransformation() else VisualTransformation.None,
+                colors = TextFieldDefaults.colors(
+                    focusedTextColor = MaterialTheme.colorScheme.onPrimary,
+                    unfocusedTextColor = MaterialTheme.colorScheme.onPrimary,
+                    focusedContainerColor = MaterialTheme.colorScheme.onSurface,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent
+                ),
+                singleLine = true,
+                maxLines = 1,
+                minLines = 1,
+                value = preShareKey,
+                onValueChange = {
+                    preShareKey = it
+                },
+            )
+        },
+        onDismissRequest = { openDialog.value = false },
+        confirmButton = {
+            Button(
+                onClick = {
+                    NetbirdModuleUtils.setPreShareKey(preShareKey)
+                    openDialog.value = false
+                }
+            ) {
+                Text(text = "Ok")
+            }
+        },
+        dismissButton = {
+            Button(
+                onClick = {
+                    openDialog.value = false
+                }
+            ) {
+                Text(text = "Cancel")
+            }
+        }
+    )
+}
+
+@Composable
 fun ConnectButton(
-    homeViewModel: HomeViewModel,
     connectButtonBgColor: Color,
     connectButtonColor: Color,
-    connectButtonIcon: Int
+    connectButtonIcon: Int,
+    //TODO
+    homeViewModel: HomeViewModel?,
+    //TODO
+    context: Context?,
 ) {
-    val context = LocalContext.current as Activity
+//    val context = LocalContext.current as Activity
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 140.dp),
+            .fillMaxWidth(),
     ) {
         Surface(
             color = connectButtonBgColor,
@@ -419,14 +434,19 @@ fun ConnectButton(
         ) {
             Surface(
                 onClick = {
-                    PermissionsUtils.checkPermissions(
-                        context,
-                        homeViewModel.sendUIIntent(HomeIntent.SwitchConnect),
-                        //通知权限
-                        Permission.POST_NOTIFICATIONS,
-                        //VPN权限
-                        Permission.BIND_VPN_SERVICE
-                    )
+                    //TODO
+                    homeViewModel?.let {
+                        context?.let { it1 ->
+                            PermissionsUtils.checkPermissions(
+                                it1,
+                                it.sendUIIntent(HomeIntent.SwitchConnect),
+                                //通知权限
+                                Permission.POST_NOTIFICATIONS,
+                                //VPN权限
+                                Permission.BIND_VPN_SERVICE
+                            )
+                        }
+                    }
                 },
                 shape = RoundedCornerShape(30.dp),
                 modifier = Modifier.padding(30.dp),
@@ -454,7 +474,10 @@ fun ConnectButtonPreview() {
         Surface(
             color = MaterialTheme.colorScheme.background,
         ) {
-//            ConnectButton()
+            val connectButtonBgColor = MaterialTheme.colorScheme.onPrimaryContainer
+            val connectButtonColor = MaterialTheme.colorScheme.primary
+            val connectButtonIcon = R.drawable.connect_icon
+            ConnectButton(connectButtonBgColor, connectButtonColor, connectButtonIcon, null, null)
         }
     }
 }
@@ -464,8 +487,7 @@ fun TipsView(tipsContent: String, tipsIcon: ImageVector) {
     Row(
         modifier = Modifier
             .padding(vertical = 16.dp)
-            .fillMaxWidth()
-            .padding(top = 30.dp),
+            .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
@@ -485,11 +507,13 @@ fun TipsView(tipsContent: String, tipsIcon: ImageVector) {
 @Preview
 @Composable
 fun TipsViewPreview() {
+    val tipsContent = "Top up to connect"
+    val tipsIcon = Icons.Default.Notifications
     AppTheme {
         Surface(
             color = MaterialTheme.colorScheme.background,
         ) {
-//            TipsView(connectState)
+            TipsView(tipsContent, tipsIcon)
         }
     }
 }
@@ -500,7 +524,6 @@ private fun ConnectionInfo(connectInfo: ConnectInfo) {
         color = MaterialTheme.colorScheme.surface,
         shape = MaterialTheme.shapes.extraLarge,
         onClick = { /*TODO*/ },
-        modifier = Modifier
     ) {
         Row(
             modifier = Modifier
@@ -511,11 +534,11 @@ private fun ConnectionInfo(connectInfo: ConnectInfo) {
             Surface(
                 shape = MaterialTheme.shapes.large,
                 color = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier.size(70.dp)
+                modifier = Modifier.size(80.dp)
             ) {
                 Image(
                     modifier = Modifier.padding(10.dp),
-                    painter = painterResource(id = R.drawable.america_united_states),
+                    painter = painterResource(id = R.drawable.app_icon),
                     contentDescription = null
                 )
             }
@@ -549,11 +572,15 @@ private fun ConnectionInfo(connectInfo: ConnectInfo) {
 @Preview
 @Composable
 fun ConnectionInfoPreview() {
+    val connectInfo = ConnectInfo(
+        deviceName = "meizu-18-cn.foxlink.tech",
+        ip = "192.168.1.1"
+    )
     AppTheme {
         Surface(
             color = MaterialTheme.colorScheme.background,
         ) {
-//            ConnectionInfo()
+            ConnectionInfo(connectInfo)
         }
     }
 }
@@ -665,7 +692,7 @@ fun UpDownSpeedPreview() {
                 deviceName = "iPhone",
                 ip = "",
                 downloadSpeeds = "0.00 Kd/s",
-                uploadSpeeds = "0.00"
+                uploadSpeeds = "0.00 Kd/s",
             )
             UpDownSpeed(connectInfo)
         }
@@ -677,7 +704,7 @@ private fun ConnectionTime(connectTime: String) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 40.dp, bottom = 20.dp),
+            .padding(top = 40.dp, bottom = 40.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -701,7 +728,7 @@ fun ConnectionTimePreview() {
         Surface(
             color = MaterialTheme.colorScheme.background,
         ) {
-//            ConnectionTime()
+            ConnectionTime("00:00:00")
         }
     }
 }
@@ -777,16 +804,4 @@ private fun HeadContent(
             }
         }
     )
-}
-
-@Preview
-@Composable
-fun HomeScreenPreview() {
-    AppTheme {
-        Surface(
-            color = MaterialTheme.colorScheme.background,
-        ) {
-            HomeScreen()
-        }
-    }
 }

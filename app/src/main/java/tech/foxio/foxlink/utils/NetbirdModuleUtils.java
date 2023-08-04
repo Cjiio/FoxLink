@@ -74,7 +74,7 @@ public class NetbirdModuleUtils {
 
     public static String inUsePreShareKey() {
         Preferences preferences = new Preferences(tech.foxio.foxlink.tool.Preferences.configFile(instance.context));
-        String preShareKey = null;
+        String preShareKey;
         try {
             preShareKey = preferences.getPreSharedKey();
             if (!preShareKey.trim().isEmpty()) {
